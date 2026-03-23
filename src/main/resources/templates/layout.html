@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolsa de Empleo - [[${title ?: 'Inicio'}]]</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- CSS Variables and Styles -->
+    <style>
+        :root {
+            --orange: #EA580C;
+            --orange-lt: #FFF7ED;
+            --dark: #0F172A;
+            --border: #E2E8F0;
+            --bg: #F8FAFC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Syne', display;
+            font-weight: 800;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            font-family: 'Syne', display;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--orange);
+            text-decoration: none;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .navbar .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .navbar .nav-links a:hover {
+            color: var(--orange);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--orange);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #DC2626;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--orange);
+            border: 2px solid var(--orange);
+        }
+
+        .btn-outline:hover {
+            background: var(--orange);
+            color: white;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--dark);
+        }
+
+        .btn-ghost:hover {
+            background: var(--orange-lt);
+        }
+
+        .btn-danger {
+            background: #DC2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #B91C1C;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .job-card {
+            padding: 1.5rem;
+            border-left: 4px solid var(--orange);
+        }
+
+        .job-card:hover {
+            background: var(--orange-lt);
+        }
+
+        /* Tables */
+        .table-wrap {
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .table-wrap table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-wrap thead {
+            background: var(--border);
+        }
+
+        .table-wrap th,
+        .table-wrap td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-wrap tbody tr:hover {
+            background: var(--orange-lt);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-green {
+            background: #10B981;
+            color: white;
+        }
+
+        .badge-orange {
+            background: var(--orange);
+            color: white;
+        }
+
+        .badge-gray {
+            background: #6B7280;
+            color: white;
+        }
+
+        /* Dashboard */
+        .dash-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .dash-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .dash-card h3 {
+            color: var(--orange);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--dark) 0%, #1E293B 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--orange);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Tree */
+        .tree-path {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: #6B7280;
+        }
+
+        .tree-item {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            margin: 0.25rem;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .tree-item:hover {
+            border-color: var(--orange);
+            background: var(--orange-lt);
+        }
+
+        /* Progress */
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--orange);
+            transition: width 0.3s;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer h4 {
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+
+        .footer a {
+            color: #CBD5E1;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer a:hover {
+            color: var(--orange);
+        }
+
+        /* Utilities */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-4 {
+            margin-top: 2rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .dash-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Messages */
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #D1FAE5;
+            color: #065F46;
+            border: 1px solid #A7F3D0;
+        }
+
+        .alert-danger {
+            background: #FEE2E2;
+            color: #991B1B;
+            border: 1px solid #FECACA;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">BolsaEmpleo</a>
+
+            <div class="nav-links">
+                <!-- Links públicos -->
+                <a href="/" th:classappend="${#httpServletRequest.requestURI == '/'} ? 'active' : ''">Inicio</a>
+                <a href="/puestos/buscar-por-caracteristicas" th:classappend="${#httpServletRequest.requestURI.startsWith('/puestos')} ? 'active' : ''">Buscar Empleos</a>
+
+                <!-- Links para empresa -->
+                <div th:if="${session.usuario != null and session.usuario.tipoUsuario == 'empresa'}">
+                    <a href="/empresa/dashboard" th:classappend="${#httpServletRequest.requestURI.startsWith('/empresa')} ? 'active' : ''">Dashboard</a>
+                    <a href="/empresa/mis-puestos">Mis Puestos</a>
+                </div>
+
+                <!-- Links para oferente -->
+                <div th:if="${session.usuario != null and session.usuario.tipoUsuario == 'oferente'}">
+                    <a href="/oferente/dashboard" th:classappend="${#httpServletRequest.requestURI.startsWith('/oferente')} ? 'active' : ''">Dashboard</a>
+                    <a href="/oferente/habilidades">Mis Habilidades</a>
+                </div>
+
+                <!-- Links para admin -->
+                <div th:if="${session.usuario != null and session.usuario.tipoUsuario == 'admin'}">
+                    <a href="/admin/dashboard" th:classappend="${#httpServletRequest.requestURI.startsWith('/admin')} ? 'active' : ''">Admin</a>
+                </div>
+
+                <!-- Botón Login/Salir -->
+                <div th:if="${session.usuario == null}">
+                    <a href="/login" class="btn btn-primary btn-sm">Iniciar Sesión</a>
+                </div>
+                <div th:if="${session.usuario != null}">
+                    <span th:text="${session.usuario.nombre}"></span>
+                    <a href="/logout" class="btn btn-ghost btn-sm">Salir</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div th:replace="~{this :: content}"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div>
+                <h4>BolsaEmpleo</h4>
+                <p>Conectando talento con oportunidades laborales.</p>
+            </div>
+            <div>
+                <h4>Para Empresas</h4>
+                <a href="/registro/empresa">Registrar Empresa</a>
+                <a href="/login">Publicar Puestos</a>
+            </div>
+            <div>
+                <h4>Para Candidatos</h4>
+                <a href="/registro/oferente">Registrar Candidato</a>
+                <a href="/login">Buscar Empleos</a>
+            </div>
+            <div>
+                <h4>Soporte</h4>
+                <a href="#">Ayuda</a>
+                <a href="#">Contacto</a>
+                <a href="#">Términos</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Thymeleaf Fragment -->
+    <div th:fragment="layout">
+        <!-- Content will be inserted here -->
+    </div>
+</body>
+</html>

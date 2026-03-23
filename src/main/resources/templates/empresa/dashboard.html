@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Dashboard Empresa - Bolsa de Empleo</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <h1>Bienvenido, <span th:text="${usuario.nombre}"></span></h1>
+            <p>Administra tus ofertas de empleo y encuentra los mejores candidatos.</p>
+
+            <div class="dash-grid">
+                <div class="dash-card">
+                    <h3 th:text="${puestosActivos ?: 0}">0</h3>
+                    <p>Puestos Activos</p>
+                    <a href="/empresa/mis-puestos" class="btn btn-primary btn-sm">Ver Puestos</a>
+                </div>
+
+                <div class="dash-card">
+                    <h3>+</h3>
+                    <p>Publicar Nuevo Puesto</p>
+                    <a href="/empresa/nuevo-puesto" class="btn btn-primary btn-sm">Publicar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

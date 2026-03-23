@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Home - Bolsa de Empleo</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>Bienvenido a Bolsa de Empleo</h1>
+                <p>Tu plataforma de conexión entre talento y oportunidades laborales.</p>
+                <a href="/public" class="btn btn-primary btn-lg">Explorar Puestos</a>
+            </div>
+        </section>
+
+        <!-- Información básica -->
+        <section class="container mt-4 mb-4">
+            <div class="dash-grid">
+                <div class="dash-card">
+                    <h3>🚀</h3>
+                    <p>Encuentra Empleo</p>
+                </div>
+                <div class="dash-card">
+                    <h3>🏢</h3>
+                    <p>Publica Puestos</p>
+                </div>
+                <div class="dash-card">
+                    <h3>📈</h3>
+                    <p>Crece Profesional</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enlaces principales -->
+        <section class="container mb-4 text-center">
+            <h2>¿Qué deseas hacer?</h2>
+            <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+                <a href="/login" class="btn btn-primary btn-lg">Iniciar Sesión</a>
+                <a href="/registro/oferente" class="btn btn-outline btn-lg">Registrar como Candidato</a>
+                <a href="/registro/empresa" class="btn btn-outline btn-lg">Registrar como Empresa</a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

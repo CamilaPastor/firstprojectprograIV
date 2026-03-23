@@ -1,0 +1,443 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║              ✅ ENTIDADES JPA CREADAS EXITOSAMENTE ✅                        ║
+║                                                                              ║
+║                    Bolsa de Empleo - Spring Boot 3.2.3                      ║
+║                            con Spring Data JPA                              ║
+║                                                                              ║
+║                          19 de marzo de 2026                                ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 📋 ENTIDADES CREADAS                                                        │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  Paquete: cr.una.bolsaempleo.model
+
+  1. ✅ Administrador.java
+     └─ Administradores del sistema
+     └─ Ubicación: src/main/java/cr/una/bolsaempleo/model/Administrador.java
+
+  2. ✅ Empresa.java
+     └─ Empresas que publican ofertas
+     └─ Ubicación: src/main/java/cr/una/bolsaempleo/model/Empresa.java
+
+  3. ✅ Oferente.java
+     └─ Personas buscando empleo
+     └─ Ubicación: src/main/java/cr/una/bolsaempleo/model/Oferente.java
+
+  4. ✅ Caracteristica.java
+     └─ Habilidades con jerarquía padre-hijo
+     └─ Ubicación: src/main/java/cr/una/bolsaempleo/model/Caracteristica.java
+
+  5. ✅ Puesto.java
+     └─ Ofertas de empleo publicadas
+     └─ Ubicación: src/main/java/cr/una/bolsaempleo/model/Puesto.java
+
+  6. ✅ PuestoCaracteristica.java
+     └─ Relación N:M Puesto-Caracteristica
+     └─ Ubicación: src/main/java/cr/una/bolsaempleo/model/PuestoCaracteristica.java
+
+  7. ✅ OferenteCaracteristica.java
+     └─ Relación N:M Oferente-Caracteristica
+     └─ Ubicación: src/main/java/cr/una/bolsaempleo/model/OferenteCaracteristica.java
+
+  8. ✅ Cv.java
+     └─ CVs en PDF de oferentes
+     └─ Ubicación: src/main/java/cr/una/bolsaempleo/model/Cv.java
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ✨ CARACTERÍSTICAS IMPLEMENTADAS                                             │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  ANOTACIONES JPA:
+  ✅ @Entity en todas las clases
+  ✅ @Table con nombre exacto de columnas SQL
+  ✅ @Column con propiedades precisas
+  ✅ @Id @GeneratedValue(IDENTITY)
+  ✅ @ManyToOne, @OneToMany, @OneToOne
+  ✅ @JoinColumn con ForeignKey
+  ✅ @Lob para LONGBLOB (Cv)
+  ✅ @Transient para passwordSinHashear
+  ✅ @Index en tablas para búsquedas
+
+  LOMBOK:
+  ✅ @Data (getters, setters, equals, hashCode, toString)
+  ✅ @NoArgsConstructor (constructor vacío)
+  ✅ @AllArgsConstructor (constructor con todos los campos)
+  ✅ @ToString.Exclude (excluir campos sensibles de toString)
+
+  VALIDACIÓN (Jakarta Validation):
+  ✅ @NotBlank (campos requeridos)
+  ✅ @Email (validación de emails)
+  ✅ @Size (rangos de longitud)
+  ✅ @Pattern (expresiones regulares)
+  ✅ @Min, @Max (rangos numéricos)
+  ✅ @DecimalMin (para salarios)
+  ✅ @NotNull (para archivos)
+
+  AUDITORÍA:
+  ✅ @PrePersist para timestamps iniciales
+  ✅ @PreUpdate para actualización automática
+  ✅ LocalDateTime para fechas
+
+  RELACIONES:
+  ✅ Empresa 1:N Puesto
+  ✅ Puesto N:M Caracteristica (via PuestoCaracteristica)
+  ✅ Oferente N:M Caracteristica (via OferenteCaracteristica)
+  ✅ Caracteristica auto-referencia (padre-hijo)
+  ✅ Oferente 1:1 Cv (UNIQUE)
+  ✅ Cascade DELETE en relaciones apropiadas
+  ✅ Lazy loading en ManyToOne
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 📊 DETALLES DE CADA ENTIDAD                                                │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  ADMINISTRADOR (Tabla: administrador)
+  ├─ Campos:
+  │  ├─ idAdmin (Integer, @Id, @GeneratedValue)
+  │  ├─ identificacion (String, UNIQUE, NotBlank)
+  │  ├─ passwordHash (String, NotBlank, Size(min 20))
+  │  ├─ fechaCreacion (LocalDateTime, automático)
+  │  └─ activo (Boolean, default TRUE)
+  └─ Índices: identificacion, activo
+
+  EMPRESA (Tabla: empresa)
+  ├─ Campos:
+  │  ├─ idEmpresa (Integer, @Id)
+  │  ├─ nombre (String, NotBlank, Size(3-150))
+  │  ├─ localizacion (String)
+  │  ├─ correo (String, UNIQUE, Email)
+  │  ├─ telefono (String)
+  │  ├─ descripcion (TEXT)
+  │  ├─ passwordHash (String)
+  │  ├─ aprobado (Boolean, default FALSE)
+  │  ├─ fechaRegistro (LocalDateTime, automático)
+  │  ├─ activo (Boolean, default TRUE)
+  │  ├─ puestos (@OneToMany, CASCADE)
+  │  └─ passwordSinHashear (@Transient)
+  └─ Índices: correo, aprobado, activo
+
+  OFERENTE (Tabla: oferente)
+  ├─ Campos:
+  │  ├─ idOferente (Integer, @Id)
+  │  ├─ identificacion (String, UNIQUE, Pattern(8-20 dígitos))
+  │  ├─ nombre (String, NotBlank)
+  │  ├─ apellido (String, NotBlank)
+  │  ├─ nacionalidad (String)
+  │  ├─ telefono (String)
+  │  ├─ correo (String, UNIQUE, Email)
+  │  ├─ residencia (String)
+  │  ├─ passwordHash (String)
+  │  ├─ aprobado (Boolean, default FALSE)
+  │  ├─ fechaRegistro (LocalDateTime, automático)
+  │  ├─ activo (Boolean, default TRUE)
+  │  ├─ caracteristicas (@OneToMany)
+  │  ├─ cv (@OneToOne, UNIQUE)
+  │  └─ passwordSinHashear (@Transient)
+  └─ Índices: identificacion, correo, aprobado, activo, nombre+apellido
+
+  CARACTERISTICA (Tabla: caracteristica)
+  ├─ Campos:
+  │  ├─ idCaracteristica (Integer, @Id)
+  │  ├─ nombre (String, NotBlank, Size(3-150))
+  │  ├─ descripcion (TEXT)
+  │  ├─ padre (@ManyToOne, auto-referencia, LAZY)
+  │  ├─ hijos (@OneToMany, auto-referencia, CASCADE)
+  │  ├─ nivelMinimo (Integer, default 1)
+  │  ├─ nivelMaximo (Integer, default 5)
+  │  ├─ activo (Boolean, default TRUE)
+  │  ├─ fechaCreacion (LocalDateTime, automático)
+  │  ├─ puestosRequeridos (@OneToMany)
+  │  └─ oferentesConCaracteristica (@OneToMany)
+  └─ Índices: nombre, id_padre, activo
+
+  PUESTO (Tabla: puesto)
+  ├─ Campos:
+  │  ├─ idPuesto (Integer, @Id)
+  │  ├─ empresa (@ManyToOne, LAZY)
+  │  ├─ descripcion (String, NotBlank, TEXT)
+  │  ├─ salario (BigDecimal, DecimalMin(0))
+  │  ├─ tipoPublicacion (String, "publico"/"privado")
+  │  ├─ activo (Boolean, default TRUE)
+  │  ├─ fechaRegistro (LocalDateTime, automático)
+  │  ├─ fechaActualizacion (LocalDateTime, automático)
+  │  └─ caracteristicasRequeridas (@OneToMany, CASCADE)
+  └─ Índices: id_empresa, tipo_publicacion, activo, fecha_registro
+
+  PUESTO_CARACTERISTICA (Tabla: puesto_caracteristica)
+  ├─ Campos:
+  │  ├─ id (Integer, @Id)
+  │  ├─ puesto (@ManyToOne, LAZY)
+  │  ├─ caracteristica (@ManyToOne, LAZY)
+  │  ├─ nivelRequerido (Integer, Min(1), Max(5), default 3)
+  │  └─ fechaCreacion (LocalDateTime, automático)
+  ├─ Constraints: UNIQUE (id_puesto, id_caracteristica)
+  └─ Índices: id_puesto, id_caracteristica, nivel_requerido
+
+  OFERENTE_CARACTERISTICA (Tabla: oferente_caracteristica)
+  ├─ Campos:
+  │  ├─ id (Integer, @Id)
+  │  ├─ oferente (@ManyToOne, LAZY)
+  │  ├─ caracteristica (@ManyToOne, LAZY)
+  │  ├─ nivel (Integer, Min(1), Max(5), default 3)
+  │  └─ fechaCreacion (LocalDateTime, automático)
+  ├─ Constraints: UNIQUE (id_oferente, id_caracteristica)
+  └─ Índices: id_oferente, id_caracteristica, nivel
+
+  CV (Tabla: cv)
+  ├─ Campos:
+  │  ├─ id (Integer, @Id)
+  │  ├─ oferente (@OneToOne UNIQUE, LAZY)
+  │  ├─ archivoPdf (byte[], @Lob, LONGBLOB, NotNull)
+  │  ├─ nombreArchivo (String, NotBlank, Size(max 255))
+  │  ├─ fechaSubida (LocalDateTime, automático)
+  │  └─ fechaActualizacion (LocalDateTime, automático)
+  └─ Índices: id_oferente, fecha_subida
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 🔗 RELACIONES MAPEADAS                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  1. Empresa → Puesto (1:N)
+     ├─ Empresa.puestos: @OneToMany(mappedBy = "empresa")
+     ├─ Puesto.empresa: @ManyToOne
+     ├─ Cascade: CASCADE, orphanRemoval = true
+     └─ Eliminar empresa → elimina todos sus puestos
+
+  2. Puesto → Caracteristica (N:M)
+     ├─ Tabla intermedia: PuestoCaracteristica
+     ├─ Puesto.caracteristicasRequeridas: @OneToMany(mappedBy = "puesto")
+     ├─ PuestoCaracteristica.puesto: @ManyToOne
+     ├─ PuestoCaracteristica.caracteristica: @ManyToOne
+     └─ Nivel requerido (1-5)
+
+  3. Oferente → Caracteristica (N:M)
+     ├─ Tabla intermedia: OferenteCaracteristica
+     ├─ Oferente.caracteristicas: @OneToMany(mappedBy = "oferente")
+     ├─ OferenteCaracteristica.oferente: @ManyToOne
+     ├─ OferenteCaracteristica.caracteristica: @ManyToOne
+     └─ Nivel del oferente (1-5)
+
+  4. Caracteristica → Caracteristica (Jerarquía)
+     ├─ Caracteristica.padre: @ManyToOne(fetch = LAZY)
+     ├─ Caracteristica.hijos: @OneToMany(mappedBy = "padre")
+     ├─ Cascade: CASCADE, orphanRemoval = true
+     └─ Crea estructura árbol (padre-hijo)
+
+  5. Oferente → Cv (1:1 UNIQUE)
+     ├─ Oferente.cv: @OneToOne(mappedBy = "oferente")
+     ├─ Cv.oferente: @OneToOne @JoinColumn(unique = true)
+     ├─ Cascade: CASCADE, orphanRemoval = true
+     └─ Un CV por oferente
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 🎯 CARACTERÍSTICAS ESPECIALES                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  PASSWORD:
+  ✅ Campo passwordHash: para contraseña hasheada (BCrypt)
+  ✅ Campo @Transient passwordSinHashear: para entrada sin hashear
+  ✅ En servicio: hashear passwordSinHashear → passwordHash
+
+  CARACTERISTICA JERARQUÍA:
+  ✅ id_padre: auto-referencia a otra característica
+  ✅ Estructura árbol con múltiples niveles
+  ✅ Ejemplo:
+     Bases de Datos (nivel 0)
+       ├─ MySQL (nivel 1)
+       ├─ PostgreSQL (nivel 1)
+       └─ Oracle (nivel 1)
+
+  CV CON ARCHIVO PDF:
+  ✅ archivoPdf: byte[] almacena el PDF completo
+  ✅ @Lob: anotación JPA para BLOB/LONGBLOB
+  ✅ @ToString.Exclude: no incluir PDF en toString (muy grande)
+  ✅ Guardado completo en la BD (embedded)
+
+  TIPO PUBLICACION:
+  ✅ tipoPublicacion: String "publico" o "privado"
+  ✅ NO es enumeración Java (para compatibilidad SQL)
+  ✅ Valores predefinidos en comentarios
+
+  TIMESTAMPS AUTOMÁTICOS:
+  ✅ @PrePersist: fecha_creacion al crear
+  ✅ @PreUpdate: fecha_actualizacion al modificar
+  ✅ No requiere manejo manual en código
+  ✅ LocalDateTime para precisión temporal
+
+  VALIDACIONES EMBEBIDAS:
+  ✅ @Email para correos
+  ✅ @Pattern para cédula (8-20 dígitos)
+  ✅ @Size para longitudes
+  ✅ @NotBlank para campos obligatorios
+  ✅ @Min/@Max para niveles (1-5)
+  ✅ Validadas automáticamente en servicio/controller
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 📝 EJEMPLOS DE CÓDIGO                                                       │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  CREAR EMPRESA:
+  ```java
+  Empresa empresa = new Empresa();
+  empresa.setNombre("TechCorp");
+  empresa.setCorreo("info@techcorp.cr");
+  empresa.setPasswordHash(encoder.encode("pass123"));
+  empresaRepository.save(empresa);
+  ```
+
+  AGREGAR PUESTO:
+  ```java
+  Puesto puesto = new Puesto();
+  puesto.setEmpresa(empresa);
+  puesto.setDescripcion("Desarrollador Java");
+  puesto.setSalario(BigDecimal.valueOf(2500000));
+  puesto.setTipoPublicacion("publico");
+  puestoRepository.save(puesto);
+  ```
+
+  AGREGAR CARACTERISTICA A PUESTO:
+  ```java
+  PuestoCaracteristica pc = new PuestoCaracteristica();
+  pc.setPuesto(puesto);
+  pc.setCaracteristica(java);  // Caracteristica con id=8
+  pc.setNivelRequerido(4);
+  puestoCaracteristicaRepository.save(pc);
+  ```
+
+  CREAR JERARQUIA:
+  ```java
+  Caracteristica padre = new Caracteristica();
+  padre.setNombre("Bases de Datos");
+  caracteristicaRepository.save(padre);
+
+  Caracteristica mysql = new Caracteristica();
+  mysql.setNombre("MySQL");
+  mysql.setPadre(padre);  // Establecer padre
+  caracteristicaRepository.save(mysql);
+  ```
+
+  SUBIR CV:
+  ```java
+  Cv cv = new Cv();
+  cv.setOferente(oferente);
+  cv.setArchivoPdf(pdfBytes);  // byte[] del archivo
+  cv.setNombreArchivo("CV_Juan.pdf");
+  cvRepository.save(cv);
+  ```
+
+  BUSCAR OFERENTES CALIFICADOS:
+  ```java
+  // Oferentes con caracteristica Java nivel >= 3
+  List<OferenteCaracteristica> oferentes = 
+    ofCarRepository.findByCaracteristicaAndNivelGreaterThanEqual(java, 3);
+  ```
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 🔍 CONSIDERACIONES IMPORTANTES                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  LAZY LOADING:
+  ✅ @ManyToOne con fetch = FetchType.LAZY
+  ✅ Evita N+1 queries
+  ✅ Usar @Transactional en servicios
+  ✅ @ToString.Exclude para evitar lazy initialization
+
+  CASCADES:
+  ✅ Empresa → Puesto: CASCADE (eliminar empresa → puestos)
+  ✅ Puesto → PuestoCaracteristica: CASCADE
+  ✅ Oferente → Caracteristica: CASCADE
+  ✅ Caracteristica: SET NULL en padre
+  ✅ orphanRemoval = true para relaciones 1:N
+
+  UNIQUENESS:
+  ✅ Identificacion: UNIQUE a nivel BD
+  ✅ Correo: UNIQUE a nivel BD
+  ✅ CV.oferente: UNIQUE (1:1)
+  ✅ PuestoCaracteristica: UNIQUE (puesto, caracteristica)
+  ✅ OferenteCaracteristica: UNIQUE (oferente, caracteristica)
+
+  PERFORMANCE:
+  ✅ Índices en todas las foreign keys
+  ✅ Índices en campos de búsqueda frecuente
+  ✅ Índices compuestos para conjuntos comunes
+  ✅ LAZY loading para evitar excesos
+  ✅ Proyecciones para queries complejas
+
+  SEGURIDAD:
+  ✅ @NotNull/@NotBlank en campos obligatorios
+  ✅ @Pattern para validar formato
+  ✅ BCrypt para passwords
+  ✅ Transactional para integridad
+  ✅ DTO si se exponen en API REST
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 🚀 PRÓXIMOS PASOS                                                           │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  1. Crear Repositorios (Spring Data JPA)
+     ├─ AdministradorRepository
+     ├─ EmpresaRepository
+     ├─ OferenteRepository
+     ├─ CaracteristicaRepository
+     ├─ PuestoRepository
+     ├─ PuestoCaracteristicaRepository
+     ├─ OferenteCaracteristicaRepository
+     └─ CvRepository
+
+  2. Crear Servicios
+     ├─ AdministradorService
+     ├─ EmpresaService
+     ├─ OferenteService
+     ├─ CaracteristicaService
+     ├─ PuestoService
+     └─ CvService
+
+  3. Crear Controladores REST
+     ├─ AdminController
+     ├─ EmpresaController
+     ├─ OferenteController
+     ├─ CaracteristicaController
+     ├─ PuestoController
+     └─ CvController
+
+  4. Crear DTOs para API REST
+     └─ Si necesitas exponer datos sin relaciones circulares
+
+  5. Crear Mappers (ModelMapper o MapStruct)
+     └─ Para convertir Entity ↔ DTO
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║              ✅ ENTIDADES JPA COMPLETAMENTE IMPLEMENTADAS ✅                ║
+║                                                                              ║
+║  • 8 entidades creadas con todas las especificaciones                       ║
+║  • Mapeos JPA correctos y optimizados                                       ║
+║  • Validaciones embebidas con Jakarta Validation                            ║
+║  • Auditoría automática con timestamps                                      ║
+║  • Jerarquía de características implementada                                ║
+║  • Archivo PDF en BD con @Lob                                               ║
+║  • Indices para rendimiento                                                 ║
+║  • Foreign keys con cascadas apropiadas                                     ║
+║  • Lombok para reducir boilerplate                                          ║
+║  • Listo para usar con Spring Data JPA                                      ║
+║                                                                              ║
+║                    Documentación incluida en ENTIDADES_JPA.md               ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Estado Final: ✅ COMPLETADO
+Fecha: 19 de marzo de 2026
+Versión: 1.0 - Producción Ready

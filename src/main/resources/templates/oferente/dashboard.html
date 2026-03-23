@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Dashboard Oferente - Bolsa de Empleo</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <h1>Bienvenido, <span th:text="${usuario.nombre}"></span></h1>
+            <p>Completa tu perfil y encuentra las mejores oportunidades laborales.</p>
+
+            <div class="dash-grid">
+                <div class="dash-card">
+                    <h3 th:text="${totalHabilidades ?: 0}">0</h3>
+                    <p>Habilidades Registradas</p>
+                    <a href="/oferente/habilidades" class="btn btn-primary btn-sm">Gestionar Habilidades</a>
+                </div>
+
+                <div class="dash-card">
+                    <h3 th:text="${tieneCv ? '✓' : '+'}">+</h3>
+                    <p th:text="${tieneCv ? 'CV Subido' : 'Subir CV'}"></p>
+                    <a href="/oferente/mi-cv" class="btn btn-primary btn-sm">Gestionar CV</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

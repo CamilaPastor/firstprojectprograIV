@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Candidato - Bolsa de Empleo</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">Bolsa de Empleo</h1>
+            <ul class="nav-links">
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/login">Cambiar tipo de usuario</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container form-container">
+        <div class="form-box" style="max-width: 400px;">
+            <div class="form-header">
+                <h2>👤 Login Candidato</h2>
+                <p class="subtitle">Accede a tu cuenta de candidato</p>
+            </div>
+            
+            <div th:if="${error}" class="error-message">
+                <strong>✗ Error:</strong> <span th:text="${error}"></span>
+            </div>
+            
+            <form action="/login/oferente" method="post" class="form">
+                
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico</label>
+                    <input type="email" id="correo" name="correo" 
+                           placeholder="tu@email.com" required autofocus>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" 
+                           placeholder="Tu contraseña" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    Iniciar Sesión
+                </button>
+                
+                <p class="form-link">
+                    ¿No tienes cuenta? <a href="/oferente/register">Regístrate aquí</a>
+                </p>
+            </form>
+            
+            <div class="info-box">
+                <h4>✓ Beneficios de registrarse:</h4>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>Busca ofertas de empleo</li>
+                    <li>Sube tu CV</li>
+                    <li>Aplica a ofertas</li>
+                    <li>Recibe notificaciones</li>
+                </ul>
+            </div>
+            
+            <p class="form-link" style="text-align: center; margin-top: 20px;">
+                <a href="/login">← Volver a seleccionar tipo de usuario</a>
+            </p>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Bolsa de Empleo. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <style>
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-header h2 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .error-message {
+            background-color: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .error-message strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-box {
+            background-color: #f0fff0;
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        .info-box h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .info-box ul {
+            color: #555;
+            font-size: 14px;
+        }
+
+        .info-box li {
+            margin: 5px 0;
+        }
+    </style>
+</body>
+</html>

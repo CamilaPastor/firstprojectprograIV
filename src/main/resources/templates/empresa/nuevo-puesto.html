@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Nuevo Puesto - Bolsa de Empleo</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container" style="max-width: 800px;">
+            <!-- Mensajes -->
+            <div th:if="${error}" class="alert alert-danger">
+                <span th:text="${error}"></span>
+            </div>
+
+            <div class="card" style="padding: 2rem;">
+                <h2 class="text-center mb-4">Publicar Nuevo Puesto</h2>
+
+                <form method="post" action="/empresa/nuevo-puesto">
+                    <!-- Descripción -->
+                    <div class="form-group">
+                        <label class="form-label">Descripción del Puesto *</label>
+                        <textarea name="descripcion" class="form-control" rows="4" required
+                                  placeholder="Describe las responsabilidades, requisitos y beneficios del puesto"></textarea>
+                    </div>
+
+                    <!-- Salario -->
+                    <div class="form-group">
+                        <label class="form-label">Salario (opcional)</label>
+                        <input type="number" name="salario" class="form-control" step="0.01"
+                               placeholder="Ej: 1500000" />
+                        <small style="color: #6B7280; font-size: 0.875rem;">En colones costarricenses</small>
+                    </div>
+
+                    <!-- Tipo de publicación -->
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Publicación *</label>
+                        <select name="tipoPublicacion" class="form-control" required>
+                            <option value="publico">Público - Visible para todos los oferentes</option>
+                            <option value="privado">Privado - Solo visible para oferentes específicos</option>
+                        </select>
+                    </div>
+
+                    <!-- Características requeridas -->
+                    <div class="form-group">
+                        <label class="form-label">Características Requeridas</label>
+                        <p style="color: #6B7280; font-size: 0.875rem; margin-bottom: 1rem;">
+                            Selecciona las habilidades y conocimientos necesarios para el puesto:
+                        </p>
+
+                        <div th:each="categoria : ${categorias}" style="margin-bottom: 1.5rem;">
+                            <h4 th:text="${categoria.nombre}" style="color: var(--orange); margin-bottom: 0.5rem;"></h4>
+
+                            <div th:if="${categoria.hijos != null and !categoria.hijos.isEmpty()}" th:each="sub : ${categoria.hijos}" style="margin-bottom: 0.5rem;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" name="caracteristicas" th:value="${sub.idCaracteristica}" />
+                                        <span th:text="${sub.nombre}"></span>
+                                    </label>
+                                    <select name="niveles" class="form-control" style="width: auto; margin-left: auto;">
+                                        <option value="1">Básico (1)</option>
+                                        <option value="2">Principiante (2)</option>
+                                        <option value="3" selected>Intermedio (3)</option>
+                                        <option value="4">Avanzado (4)</option>
+                                        <option value="5">Experto (5)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div th:if="${categoria.hijos == null or categoria.hijos.isEmpty()}">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" name="caracteristicas" th:value="${categoria.idCaracteristica}" />
+                                        <span th:text="${categoria.nombre}"></span>
+                                    </label>
+                                    <select name="niveles" class="form-control" style="width: auto; margin-left: auto;">
+                                        <option value="1">Básico (1)</option>
+                                        <option value="2">Principiante (2)</option>
+                                        <option value="3" selected>Intermedio (3)</option>
+                                        <option value="4">Avanzado (4)</option>
+                                        <option value="5">Experto (5)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones -->
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <a href="/empresa/mis-puestos" class="btn btn-ghost">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Publicar Puesto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Contacto - Bolsa de Empleo</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container form-container">
+        <div class="form-box" style="max-width: 600px;">
+            <h2>Contacto</h2>
+            
+            <div style="margin-bottom: 30px;">
+                <h3>Información de Contacto</h3>
+                <p><strong>Email:</strong> info@bolsaempleo.com</p>
+                <p><strong>Teléfono:</strong> +55 1234-5678</p>
+                <p><strong>Dirección:</strong> Calle Principal 123, Ciudad, Estado</p>
+                <p><strong>Horario:</strong> Lunes a Viernes, 9:00 AM - 6:00 PM</p>
+            </div>
+            
+            <form class="form">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="asunto">Asunto</label>
+                    <input type="text" id="asunto" name="asunto" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mensaje">Mensaje</label>
+                    <textarea id="mensaje" name="mensaje" rows="6" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

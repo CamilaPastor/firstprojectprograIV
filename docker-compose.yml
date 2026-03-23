@@ -1,0 +1,132 @@
+
+
+# Definición de servicios
+services:
+
+  # =====================
+  # SERVICIO: MySQL 8.0
+  # =====================
+  mysql:
+    image: mysql:8.0
+    container_name: bolsa_empleo_mysql
+    restart: always
+    
+    # Variables de entorno para MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: bolsa_empleo
+      MYSQL_USER: bolsa_user
+      MYSQL_PASSWORD: bolsa1234
+      MYSQL_ROOT_HOST: '%'
+      TZ: 'America/Costa_Rica'
+      MYSQL_LOG_CONSOLE: "true"
+    
+    # Puertos
+    ports:
+      - "3306:3306"
+    
+    # Volumen para persistencia de datos
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./BolsaEmpleo.sql:/docker-entrypoint-initdb.d/init.sql
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bolsa_user", "-pbolsa1234"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    
+    # Configuración de red
+    networks:
+      - bolsa_network
+    
+    # Comandos adicionales para MySQL
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --max_connections=1000
+      --log-error=/var/log/mysql/error.log
+    
+    # Límites de recursos
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # ==========================
+  # SERVICIO: Aplicación Spring
+  # ==========================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bolsa_empleo_app
+    restart: unless-stopped
+    
+    # Puertos
+    ports:
+      - "8080:8080"
+    
+    # Variables de entorno para la conexión JDBC
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bolsa_empleo?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: bolsa_user
+      SPRING_DATASOURCE_PASSWORD: bolsa1234
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_SHOW_SQL: "false"
+      SPRING_APPLICATION_NAME: bolsa-empleo
+      SPRING_PROFILES_ACTIVE: docker
+      JAVA_OPTS: "-Xmx512m -Xms256m"
+      TZ: 'America/Costa_Rica'
+    
+    # Dependencia de MySQL
+    depends_on:
+      mysql:
+        condition: service_healthy
+    
+    # Volúmenes (opcional para logs)
+    volumes:
+      - ./logs:/app/logs
+    
+    # Configuración de red
+    networks:
+      - bolsa_network
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Límites de recursos
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 768M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+# Definición de volúmenes
+volumes:
+  mysql_data:
+    driver: local
+
+# Definición de red
+networks:
+  bolsa_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

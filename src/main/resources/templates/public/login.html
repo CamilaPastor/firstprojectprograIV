@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Iniciar Sesión - Bolsa de Empleo</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container" style="max-width: 500px; margin: 2rem auto;">
+            <!-- Mensajes -->
+            <div th:if="${error}" class="alert alert-danger">
+                <span th:text="${error}"></span>
+            </div>
+
+            <div th:if="${success}" class="alert alert-success">
+                <span th:text="${success}"></span>
+            </div>
+
+            <!-- Card de Login -->
+            <div class="card" style="padding: 2rem;">
+                <h2 class="text-center mb-4">Iniciar Sesión</h2>
+
+                <form method="post" action="/login">
+                    <!-- Tipo de usuario -->
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Usuario *</label>
+                        <select name="tipo" class="form-control" required>
+                            <option value="">Selecciona tu tipo</option>
+                            <option value="empresa">Empresa</option>
+                            <option value="oferente">Oferente</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+
+                    <!-- Usuario -->
+                    <div class="form-group">
+                        <label class="form-label">Usuario *</label>
+                        <input type="text" name="usuario" class="form-control" required
+                               placeholder="Correo electrónico o ID" />
+                        <small style="color: #6B7280; font-size: 0.875rem;">
+                            Para empresas/oferentes: correo electrónico<br>
+                            Para administradores: identificación
+                        </small>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label class="form-label">Contraseña *</label>
+                        <input type="password" name="password" class="form-control" required
+                               placeholder="Tu contraseña" />
+                    </div>
+
+                    <!-- Botón -->
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Iniciar Sesión</button>
+                </form>
+
+                <!-- Links de registro -->
+                <div class="text-center mt-4">
+                    <p>¿No tienes cuenta?</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="/registro/oferente" class="btn btn-outline btn-sm">Registrar como Oferente</a>
+                        <a href="/registro/empresa" class="btn btn-outline btn-sm">Registrar como Empresa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

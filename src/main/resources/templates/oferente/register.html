@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Candidato - Bolsa de Empleo</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">Bolsa de Empleo</h1>
+            <ul class="nav-links">
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/login/oferente">Login Candidato</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container form-container">
+        <div class="form-box">
+            <h2>Registro de Candidato</h2>
+            <p class="subtitle">Crea tu cuenta y comienza a buscar oportunidades</p>
+            
+            <div th:if="${error}" class="error-message">
+                <strong>✗ Error:</strong> <span th:text="${error}"></span>
+            </div>
+            
+            <form th:action="@{/oferente/register}" th:object="${oferente}" method="post" class="form">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre *</label>
+                        <input type="text" id="nombre" th:field="*{nombre}" 
+                               placeholder="Juan" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos *</label>
+                        <input type="text" id="apellidos" th:field="*{apellidos}" 
+                               placeholder="Pérez García" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="correo">Correo Electrónico *</label>
+                        <input type="email" id="correo" th:field="*{correo}" 
+                               placeholder="tu@email.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" id="telefono" th:field="*{telefono}" 
+                               placeholder="(55) 1234-5678">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="localizacion">Localización</label>
+                        <input type="text" id="localizacion" th:field="*{localizacion}" 
+                               placeholder="Ciudad, Estado">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="experiencia">Años de Experiencia</label>
+                        <input type="number" id="experiencia" th:field="*{experiencia}" 
+                               placeholder="0" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="profesion">Profesión / Cargo</label>
+                    <input type="text" id="profesion" th:field="*{profesion}" 
+                           placeholder="Ej: Desarrollador Web, Diseñador Gráfico">
+                </div>
+                
+                <div class="form-group">
+                    <label for="descripcion">Resumen Profesional</label>
+                    <textarea id="descripcion" th:field="*{descripcion}" 
+                              rows="4" placeholder="Cuéntanos sobre tu experiencia y habilidades..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="passwordHash">Contraseña *</label>
+                    <input type="password" id="passwordHash" th:field="*{passwordHash}" 
+                           placeholder="Crea una contraseña segura" required>
+                    <small class="help-text">Mínimo 8 caracteres</small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    Registrarse
+                </button>
+                
+                <p class="form-link">
+                    ¿Ya tienes cuenta? <a href="/login/oferente">Inicia sesión aquí</a>
+                </p>
+            </form>
+            
+            <div class="info-box">
+                <h4>✓ Próximos pasos:</h4>
+                <ol>
+                    <li>Completa tu registro</li>
+                    <li>Inicia sesión</li>
+                    <li>Sube tu CV</li>
+                    <li>Busca y aplica a ofertas</li>
+                    <li>¡Consigue el trabajo que deseas!</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Bolsa de Empleo. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>

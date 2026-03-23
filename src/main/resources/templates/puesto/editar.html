@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Puesto</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container form-container">
+        <div class="form-box">
+            <h2>Editar Puesto</h2>
+            
+            <form th:action="@{/puesto/editar}" th:object="${puesto}" method="post" class="form">
+                <input type="hidden" th:field="*{puestoId}">
+                
+                <div class="form-group">
+                    <label for="titulo">Título del Puesto</label>
+                    <input type="text" id="titulo" th:field="*{titulo}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" th:field="*{descripcion}" rows="6"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="requisitos">Requisitos</label>
+                    <textarea id="requisitos" th:field="*{requisitos}" rows="4"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="salarioMinimo">Salario Mínimo</label>
+                        <input type="number" id="salarioMinimo" th:field="*{salarioMinimo}" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="salarioMaximo">Salario Máximo</label>
+                        <input type="number" id="salarioMaximo" th:field="*{salarioMaximo}" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ciudad">Ciudad</label>
+                    <input type="text" id="ciudad" th:field="*{ciudad}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="activo">Activo</label>
+                    <input type="checkbox" id="activo" th:field="*{activo}">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <a th:href="@{/puesto/detalle/{id}(id=${puesto.puestoId})}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

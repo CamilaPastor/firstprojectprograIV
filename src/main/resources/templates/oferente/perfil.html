@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil Candidato</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Perfil de Candidato</h2>
+        
+        <div class="profile-section">
+            <h3>Información Personal</h3>
+            <form th:action="@{/oferente/actualizar}" th:object="${oferente}" method="post" class="form">
+                <input type="hidden" th:field="*{oferenteId}">
+                
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" th:field="*{nombre}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" id="apellido" th:field="*{apellido}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" th:field="*{email}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="profesion">Profesión</label>
+                    <input type="text" id="profesion" th:field="*{profesion}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="experienciaAnios">Años de Experiencia</label>
+                    <input type="number" id="experienciaAnios" th:field="*{experienciaAnios}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="ciudad">Ciudad</label>
+                    <input type="text" id="ciudad" th:field="*{ciudad}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="resumenProfesional">Resumen Profesional</label>
+                    <textarea id="resumenProfesional" th:field="*{resumenProfesional}" rows="4"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+            </form>
+        </div>
+        
+        <div class="profile-section">
+            <h3>Habilidades y Características</h3>
+            <a th:href="@{/caracteristica/agregar-oferente/{id}(id=${oferente.oferenteId})}" class="btn btn-secondary">Agregar Habilidad</a>
+            
+            <div th:if="${oferente.caracteristicas.size() > 0}" class="characteristics-list">
+                <table>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Nivel</th>
+                        <th>Acción</th>
+                    </tr>
+                    <tr th:each="car : ${oferente.caracteristicas}">
+                        <td th:text="${car.nombre}"></td>
+                        <td th:text="${car.tipo}"></td>
+                        <td th:text="${car.nivel}"></td>
+                        <td>
+                            <form th:action="@{/caracteristica/eliminar/{id}(id=${car.caracteristicaId}, oferenteId=${oferente.oferenteId})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn-small">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="profile-section">
+            <h3>Currículum Vitae</h3>
+            <a th:href="@{/cv/subir/{id}(id=${oferente.oferenteId})}" class="btn btn-secondary">Subir CV</a>
+            
+            <div th:if="${oferente.cvs.size() > 0}" class="cv-list">
+                <table>
+                    <tr>
+                        <th>Nombre del Archivo</th>
+                        <th>Tipo</th>
+                        <th>Tamaño (KB)</th>
+                        <th>Principal</th>
+                        <th>Acciones</th>
+                    </tr>
+                    <tr th:each="cv : ${oferente.cvs}">
+                        <td th:text="${cv.nombreArchivo}"></td>
+                        <td th:text="${cv.tipoArchivo}"></td>
+                        <td th:text="${cv.tamanio / 1024}"></td>
+                        <td>
+                            <span th:if="${cv.principal}" class="badge-primary">Sí</span>
+                            <span th:unless="${cv.principal}" class="badge-secondary">No</span>
+                        </td>
+                        <td>
+                            <form th:action="@{/cv/establecer-principal/{cvId}/{oferenteId}(cvId=${cv.cvId}, oferenteId=${oferente.oferenteId})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn-small" th:disabled="${cv.principal}">Establecer Principal</button>
+                            </form>
+                            <form th:action="@{/cv/eliminar/{cvId}/{oferenteId}(cvId=${cv.cvId}, oferenteId=${oferente.oferenteId})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn-small">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <a th:href="@{/oferente/dashboard(id=${oferente.oferenteId})}" class="btn btn-secondary">Volver</a>
+    </div>
+</body>
+</html>

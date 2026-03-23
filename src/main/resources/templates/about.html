@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acerca de - Bolsa de Empleo</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav>
+        <div class="navbar">
+            <div class="navbar-brand">
+                <a th:href="@{/}">Bolsa de Empleo</a>
+            </div>
+            <ul class="navbar-menu">
+                <li><a th:href="@{/}">Inicio</a></li>
+                <li><a th:href="@{/about}">Acerca de</a></li>
+                <li><a th:href="@{/contact}">Contacto</a></li>
+                <li><a th:href="@{/login}">Ingresar</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="about-section">
+            <h1>Acerca de Nosotros</h1>
+            
+            <article class="about-content">
+                <h2>Nuestra Misión</h2>
+                <p>
+                    Proporcionamos una plataforma eficiente y segura que conecta profesionales 
+                    con empresas, facilitando el proceso de búsqueda y reclutamiento de talento.
+                </p>
+                
+                <h2>Nuestros Valores</h2>
+                <ul>
+                    <li><strong>Integridad:</strong> Operamos con transparencia y honestidad</li>
+                    <li><strong>Innovación:</strong> Continuamente mejoramos nuestros servicios</li>
+                    <li><strong>Inclusión:</strong> Oportunidades para todos los profesionales</li>
+                    <li><strong>Seguridad:</strong> Protegemos los datos de nuestros usuarios</li>
+                </ul>
+
+                <h2>Historia</h2>
+                <p>
+                    La Bolsa de Empleo fue creada con el objetivo de revolucionar la forma en que 
+                    los profesionales encuentran oportunidades laborales y cómo las empresas reclutan talento.
+                </p>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Bolsa de Empleo. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>

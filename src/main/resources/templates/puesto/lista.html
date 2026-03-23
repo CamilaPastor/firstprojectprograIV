@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Empleos</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Empleos Disponibles</h2>
+        
+        <div class="search-section">
+            <form action="/puesto/buscar" method="get" class="search-form">
+                <input type="text" name="ciudad" placeholder="Buscar por ciudad..." required>
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
+        
+        <div th:if="${puestos.size() == 0}" class="empty-state">
+            <p>No hay empleos disponibles en este momento.</p>
+        </div>
+        
+        <div th:if="${puestos.size() > 0}" class="jobs-grid">
+            <div th:each="puesto : ${puestos}" class="job-card">
+                <h3 th:text="${puesto.titulo}"></h3>
+                <p class="company" th:text="${puesto.empresa.nombre}"></p>
+                <p th:text="${puesto.ciudad} + ', ' + ${puesto.estado}"></p>
+                <p class="job-type" th:text="${puesto.tipoContrato}"></p>
+                
+                <div th:if="${puesto.salarioMinimo != null}" class="salary">
+                    <span th:text="${puesto.salarioMinimo} + ' - ' + ${puesto.salarioMaximo} + ' ' + ${puesto.moneda}"></span>
+                </div>
+                
+                <p class="experience" th:text="'Exp. requerida: ' + ${puesto.experienciaRequerida}"></p>
+                
+                <a th:href="@{/puesto/detalle/{id}(id=${puesto.puestoId})}" class="btn btn-primary">Ver Detalles</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

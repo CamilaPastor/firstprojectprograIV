@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Mi CV - Bolsa de Empleo</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container" style="max-width: 800px;">
+            <!-- Mensajes -->
+            <div th:if="${success}" class="alert alert-success">
+                <span th:text="${success}"></span>
+            </div>
+
+            <div th:if="${error}" class="alert alert-danger">
+                <span th:text="${error}"></span>
+            </div>
+
+            <h1>Mi Currículum Vitae</h1>
+
+            <div th:if="${tieneCv}" class="card" style="padding: 2rem; margin-bottom: 2rem;">
+                <h3>CV Actual</h3>
+                <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center;">
+                    <div>
+                        <p><strong>Archivo:</strong> <span th:text="${cv.nombreArchivo}"></span></p>
+                        <p><strong>Subido:</strong> <span th:text="${#temporals.format(cv.fechaSubida, 'dd/MM/yyyy HH:mm')}"></span></p>
+                        <p><strong>Última actualización:</strong> <span th:text="${#temporals.format(cv.fechaActualizacion, 'dd/MM/yyyy HH:mm')}"></span></p>
+                    </div>
+                    <div>
+                        <a th:href="@{'/oferente/descargar-cv/' + ${cv.oferente.idOferente}}" class="btn btn-primary">Descargar PDF</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="padding: 2rem;">
+                <h3 th:text="${tieneCv ? 'Actualizar CV' : 'Subir CV'}"></h3>
+                <p style="color: #6B7280; margin-bottom: 1.5rem;">
+                    Sube tu currículum vitae en formato PDF. El archivo debe tener un tamaño máximo de 5MB.
+                </p>
+
+                <form method="post" action="/oferente/subir-cv" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="form-label">Archivo PDF *</label>
+                        <input type="file" name="archivo" class="form-control" accept=".pdf" required />
+                        <small style="color: #6B7280; font-size: 0.875rem;">Solo archivos PDF, máximo 5MB</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <span th:text="${tieneCv ? 'Actualizar CV' : 'Subir CV'}"></span>
+                    </button>
+                </form>
+            </div>
+
+            <div th:if="${!tieneCv}" style="margin-top: 2rem; padding: 2rem; background: var(--orange-lt); border-radius: 0.5rem; text-align: center;">
+                <h3>¡Importante!</h3>
+                <p>Subir tu CV aumenta significativamente tus posibilidades de ser contactado por empresas.</p>
+                <p>El CV debe estar actualizado y reflejar tu experiencia real.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

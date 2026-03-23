@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Buscar Puestos - Bolsa de Empleo</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <h1 class="text-center mb-4">Buscar Puestos de Trabajo</h1>
+
+            <!-- Formulario de búsqueda -->
+            <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+                <h3>Filtrar por Características</h3>
+                <p>Selecciona las características que buscas en un puesto:</p>
+
+                <form method="get" action="/puestos/buscar-por-caracteristicas">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                        <!-- Características raíz -->
+                        <div th:each="categoria : ${categorias}" style="border: 1px solid var(--border); border-radius: 0.5rem; padding: 1rem;">
+                            <h4 th:text="${categoria.nombre}" style="margin-bottom: 0.5rem; color: var(--orange);"></h4>
+
+                            <!-- Subcategorías -->
+                            <div th:if="${categoria.hijos != null and !categoria.hijos.isEmpty()}" th:each="sub : ${categoria.hijos}" style="margin-bottom: 0.25rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" name="ids" th:value="${sub.idCaracteristica}" />
+                                    <span th:text="${sub.nombre}"></span>
+                                </label>
+                            </div>
+
+                            <!-- Si no tiene hijos, mostrar la categoría -->
+                            <div th:if="${categoria.hijos == null or categoria.hijos.isEmpty()}">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" name="ids" th:value="${categoria.idCaracteristica}" />
+                                    <span th:text="${categoria.nombre}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg">Buscar Puestos</button>
+                </form>
+            </div>
+
+            <!-- Resultados -->
+            <div th:if="${puestos != null}">
+                <h2>Resultados de Búsqueda</h2>
+
+                <div th:if="${puestos.isEmpty()}" class="text-center" style="padding: 2rem;">
+                    <p>No se encontraron puestos que coincidan con los criterios seleccionados.</p>
+                    <a href="/puestos/buscar-por-caracteristicas" class="btn btn-outline">Nueva Búsqueda</a>
+                </div>
+
+                <div th:if="${!puestos.isEmpty()}" class="dash-grid">
+                    <div th:each="puesto : ${puestos}" class="card job-card">
+                        <h3 th:text="${puesto.descripcion}">Descripción del puesto</h3>
+                        <p><strong>Empresa:</strong> <span th:text="${puesto.empresa.nombre}">Nombre Empresa</span></p>
+                        <p><strong>Salario:</strong> <span th:text="${puesto.salario != null ? '₡ ' + #numbers.formatDecimal(puesto.salario, 0, 'COMMA', 0, 'POINT') : 'A convenir'}">Salario</span></p>
+                        <p><strong>Tipo:</strong> <span th:text="${puesto.tipoPublicacion == 'publico' ? 'Público' : 'Privado'}">Tipo</span></p>
+
+                        <!-- Características requeridas -->
+                        <div th:if="${puesto.caracteristicasRequeridas != null and !puesto.caracteristicasRequeridas.isEmpty()}" style="margin-top: 1rem;">
+                            <p><strong>Requisitos principales:</strong></p>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                                <span th:each="car : ${puesto.caracteristicasRequeridas}" class="badge badge-orange" th:text="${car.caracteristica.nombre + ' (' + car.nivelRequerido + ')'}"></span>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1rem;">
+                            <a th:href="@{'/empresa/buscar-candidatos?idPuesto=' + ${puesto.idPuesto}}" class="btn btn-outline btn-sm">Ver Candidatos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros seleccionados -->
+            <div th:if="${idsSeleccionados != null and !idsSeleccionados.isEmpty()}" style="margin-top: 2rem; padding: 1rem; background: var(--orange-lt); border-radius: 0.5rem;">
+                <p><strong>Filtros aplicados:</strong> <span th:text="${idsSeleccionados.size()}"></span> características seleccionadas</p>
+                <a href="/puestos/buscar-por-caracteristicas" class="btn btn-ghost btn-sm">Limpiar filtros</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Inicio - Bolsa de Empleo</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>Encuentra tu Empleo Ideal Hoy Mismo</h1>
+                <p>Conecta con las mejores oportunidades laborales. Miles de puestos disponibles para profesionales como tú.</p>
+                <a href="/public/puestos/buscar-por-caracteristicas" class="btn btn-primary btn-lg">Buscar Empleos</a>
+            </div>
+        </section>
+
+        <!-- Estadísticas -->
+        <section class="container mt-4 mb-4">
+            <div class="dash-grid">
+                <div class="dash-card">
+                    <h3>10,000+</h3>
+                    <p>Puestos Disponibles</p>
+                </div>
+                <div class="dash-card">
+                    <h3>5,000+</h3>
+                    <p>Empresas Registradas</p>
+                </div>
+                <div class="dash-card">
+                    <h3>50,000+</h3>
+                    <p>Oferentes Activos</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Últimos Puestos -->
+        <section class="container mb-4">
+            <h2 class="text-center mb-4">Últimas Oportunidades</h2>
+
+            <div th:if="${puestos != null and !puestos.isEmpty()}" class="dash-grid">
+                <div th:each="puesto : ${puestos}" class="card job-card">
+                    <h3 th:text="${puesto.descripcion}">Descripción del puesto</h3>
+                    <p><strong>Empresa:</strong> <span th:text="${puesto.empresa.nombre}">Nombre Empresa</span></p>
+                    <p><strong>Salario:</strong> <span th:text="${puesto.salario != null ? '₡ ' + #numbers.formatDecimal(puesto.salario, 0, 'COMMA', 0, 'POINT') : 'A convenir'}">Salario</span></p>
+                    <p><strong>Tipo:</strong> <span th:text="${puesto.tipoPublicacion == 'publico' ? 'Público' : 'Privado'}">Tipo</span></p>
+                    <div class="mt-4">
+                        <a th:href="@{'/public/puestos/buscar-por-caracteristicas?ids=' + ${puesto.caracteristicasRequeridas.stream().map(c -> c.caracteristica.idCaracteristica).toList().toString().replace('[', '').replace(']', '').replace(' ', '')}}" class="btn btn-outline btn-sm">Ver Requisitos</a>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${puestos == null or puestos.isEmpty()}" class="text-center">
+                <p>No hay puestos disponibles en este momento.</p>
+            </div>
+        </section>
+
+        <!-- CTA Banner -->
+        <section style="background: linear-gradient(135deg, var(--orange) 0%, #DC2626 100%); color: white; padding: 3rem 0; text-align: center;">
+            <div class="container">
+                <h2>¿Listo para encontrar tu próximo empleo?</h2>
+                <p>Regístrate ahora y accede a miles de oportunidades laborales.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/registro/oferente" class="btn btn-primary btn-lg" style="background: white; color: var(--orange); border: 2px solid white;">Soy Candidato</a>
+                    <a href="/registro/empresa" class="btn btn-outline btn-lg" style="border: 2px solid white; color: white;">Soy Empresa</a>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

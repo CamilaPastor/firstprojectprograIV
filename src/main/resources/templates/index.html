@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolsa de Empleo - Inicio</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav>
+        <div class="navbar">
+            <div class="navbar-brand">
+                <a th:href="@{/}">Bolsa de Empleo</a>
+            </div>
+            <ul class="navbar-menu">
+                <li><a th:href="@{/}">Inicio</a></li>
+                <li><a th:href="@{/about}">Acerca de</a></li>
+                <li><a th:href="@{/contact}">Contacto</a></li>
+                <li><a th:href="@{/login}">Ingresar</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Bienvenido a la Bolsa de Empleo</h1>
+            <p>Conectamos profesionales con las mejores oportunidades laborales</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary">Buscar Empleo</a>
+                <a href="#" class="btn btn-secondary">Publicar Oferta</a>
+            </div>
+        </section>
+
+        <section class="features">
+            <h2>Características Principales</h2>
+            <div class="features-grid">
+                <article class="feature-card">
+                    <h3>Para Oferentes</h3>
+                    <p>Publica tus perfiles profesionales y busca las mejores oportunidades</p>
+                </article>
+                <article class="feature-card">
+                    <h3>Para Empresas</h3>
+                    <p>Encuentra y recluta los mejores talentos disponibles</p>
+                </article>
+                <article class="feature-card">
+                    <h3>Seguridad</h3>
+                    <p>Tu información está protegida con los más altos estándares de seguridad</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Bolsa de Empleo. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>

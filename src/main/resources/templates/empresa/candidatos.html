@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Candidatos - Bolsa de Empleo</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div>
+                    <h1>Candidatos para: <span th:text="${puesto.descripcion.length() > 30 ? puesto.descripcion.substring(0, 30) + '...' : puesto.descripcion}" style="color: var(--orange);"></span></h1>
+                    <p>Empresa: <span th:text="${puesto.empresa.nombre}"></span></p>
+                </div>
+                <a href="/empresa/mis-puestos" class="btn btn-ghost">← Volver a mis puestos</a>
+            </div>
+
+            <div th:if="${candidatos != null and !candidatos.isEmpty()}">
+                <p style="margin-bottom: 2rem;">Se encontraron <span th:text="${candidatos.size()}"></span> candidatos calificados</p>
+
+                <div th:each="candidato : ${candidatos}" class="card" style="margin-bottom: 1rem; padding: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 th:text="${candidato.oferente.nombre + ' ' + candidato.oferente.apellido}"></h3>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--orange);" th:text="${#numbers.formatDecimal(candidato.porcentaje, 1, 'POINT', 1, 'POINT')} + '%'"></div>
+                            <div style="font-size: 0.875rem; color: #6B7280;">Coincidencia</div>
+                        </div>
+                    </div>
+
+                    <!-- Barra de progreso -->
+                    <div class="progress" style="margin-bottom: 1rem;">
+                        <div class="progress-fill" th:style="'width: ' + ${candidato.porcentaje} + '%'"></div>
+                    </div>
+
+                    <!-- Estadísticas -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <strong>Cumplidos:</strong> <span th:text="${candidato.cumplidos}"></span> de <span th:text="${candidato.total}"></span>
+                        </div>
+                        <div>
+                            <strong>Email:</strong> <span th:text="${candidato.oferente.correo}"></span>
+                        </div>
+                        <div>
+                            <strong>Nacionalidad:</strong> <span th:text="${candidato.oferente.nacionalidad ?: 'No especificada'}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Botón ver detalle -->
+                    <div style="text-align: right;">
+                        <a th:href="@{'/empresa/detalle-candidato/' + ${candidato.oferente.idOferente}}" class="btn btn-primary btn-sm">Ver Detalles</a>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${candidatos == null or candidatos.isEmpty()}" class="text-center" style="padding: 3rem;">
+                <h3>No se encontraron candidatos</h3>
+                <p>No hay oferentes que cumplan con los requisitos de este puesto.</p>
+                <a href="/empresa/mis-puestos" class="btn btn-ghost">Volver a mis puestos</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
