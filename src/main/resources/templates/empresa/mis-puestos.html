@@ -1,29 +1,32 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
-<head>
-    <title>Mis Puestos - Bolsa de Empleo</title>
-</head>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Empresa - Mis puestos</title></head>
 <body>
     <div layout:fragment="content">
         <div class="container">
-            <!-- Mensajes -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                <div class="page-header" style="margin-bottom: 0;">
+                    <h1>&#128203; Mis puestos</h1>
+                    <p>Gestiona tus vacantes publicadas</p>
+                </div>
+                <a href="/empresa/nuevo-puesto" class="btn btn-primary">&#10133; Publicar puesto</a>
+            </div>
+
             <div th:if="${success}" class="alert alert-success">
                 <span th:text="${success}"></span>
             </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h1>Mis Puestos de Trabajo</h1>
-                <a href="/empresa/nuevo-puesto" class="btn btn-primary">+ Nuevo Puesto</a>
+            <div th:if="${error}" class="alert alert-danger">
+                <span th:text="${error}"></span>
             </div>
 
-            <div th:if="${puestos != null and !puestos.isEmpty()}" class="table-wrap">
+            <div th:if="${puestos != null && !puestos.isEmpty()}" class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Descripción</th>
+                            <th>Descripcion</th>
                             <th>Salario</th>
-                            <th>Tipo</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -31,27 +34,22 @@
                     <tbody>
                         <tr th:each="puesto : ${puestos}">
                             <td th:text="${puesto.idPuesto}"></td>
+                            <td th:text="${puesto.descripcion}" style="font-weight: 600;"></td>
                             <td>
-                                <div th:text="${puesto.descripcion.length() > 50 ? puesto.descripcion.substring(0, 50) + '...' : puesto.descripcion}"></div>
-                            </td>
-                            <td th:text="${puesto.salario != null ? '₡ ' + #numbers.formatDecimal(puesto.salario, 0, 'COMMA', 0, 'POINT') : 'A convenir'}"></td>
-                            <td>
-                                <span th:class="'badge ' + (${puesto.tipoPublicacion == 'publico' ? 'badge-green' : 'badge-gray'})"
-                                      th:text="${puesto.tipoPublicacion == 'publico' ? 'Público' : 'Privado'}"></span>
+                                <span th:if="${puesto.salario != null}" th:text="'&#8353; ' + ${#numbers.formatDecimal(puesto.salario, 0, 'COMMA', 2, 'POINT')}"></span>
+                                <span th:if="${puesto.salario == null}" class="text-muted">N/A</span>
                             </td>
                             <td>
-                                <span th:class="'badge ' + (${puesto.activo ? 'badge-green' : 'badge-orange'})"
-                                      th:text="${puesto.activo ? 'Activo' : 'Inactivo'}"></span>
+                                <span th:if="${puesto.activo}" class="badge badge-success">Activo</span>
+                                <span th:unless="${puesto.activo}" class="badge badge-danger">Inactivo</span>
                             </td>
                             <td>
-                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                    <a th:href="@{'/empresa/buscar-candidatos?idPuesto=' + ${puesto.idPuesto}}" class="btn btn-primary btn-sm">Candidatos</a>
-                                    <form method="post" action="/empresa/desactivar" style="display: inline;">
+                                <div class="actions-row">
+                                    <form th:if="${puesto.activo}" method="post" action="/empresa/desactivar" class="inline">
                                         <input type="hidden" name="idPuesto" th:value="${puesto.idPuesto}" />
-                                        <button type="submit" class="btn btn-danger btn-sm"
-                                                th:if="${puesto.activo}"
-                                                onclick="return confirm('¿Estás seguro de desactivar este puesto?')">Desactivar</button>
+                                        <button type="submit" class="btn btn-warning btn-sm">Desactivar</button>
                                     </form>
+                                    <a th:href="@{'/empresa/buscar-candidatos?idPuesto=' + ${puesto.idPuesto}}" class="btn btn-accent btn-sm">Buscar candidatos</a>
                                 </div>
                             </td>
                         </tr>
@@ -59,10 +57,10 @@
                 </table>
             </div>
 
-            <div th:if="${puestos == null or puestos.isEmpty()}" class="text-center" style="padding: 3rem;">
-                <h3>No tienes puestos publicados</h3>
-                <p>Publica tu primer puesto de trabajo para empezar a recibir candidatos.</p>
-                <a href="/empresa/nuevo-puesto" class="btn btn-primary">Publicar Primer Puesto</a>
+            <div th:if="${puestos == null || puestos.isEmpty()}" class="empty-state">
+                <div class="empty-icon">&#128194;</div>
+                <p>No tienes puestos registrados aun.</p>
+                <a href="/empresa/nuevo-puesto" class="btn btn-primary mt-2">Publicar tu primer puesto</a>
             </div>
         </div>
     </div>

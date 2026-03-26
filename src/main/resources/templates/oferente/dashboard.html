@@ -1,26 +1,31 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
-<head>
-    <title>Dashboard Oferente - Bolsa de Empleo</title>
-</head>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Oferente - Dashboard</title></head>
 <body>
     <div layout:fragment="content">
         <div class="container">
-            <h1>Bienvenido, <span th:text="${usuario.nombre}"></span></h1>
-            <p>Completa tu perfil y encuentra las mejores oportunidades laborales.</p>
+            <div class="page-header">
+                <h1>&#128100; Panel de Oferente</h1>
+                <p>Gestiona tu perfil profesional, habilidades y CV</p>
+            </div>
 
-            <div class="dash-grid">
-                <div class="dash-card">
-                    <h3 th:text="${totalHabilidades ?: 0}">0</h3>
-                    <p>Habilidades Registradas</p>
-                    <a href="/oferente/habilidades" class="btn btn-primary btn-sm">Gestionar Habilidades</a>
-                </div>
-
-                <div class="dash-card">
-                    <h3 th:text="${tieneCv ? '✓' : '+'}">+</h3>
-                    <p th:text="${tieneCv ? 'CV Subido' : 'Subir CV'}"></p>
-                    <a href="/oferente/mi-cv" class="btn btn-primary btn-sm">Gestionar CV</a>
-                </div>
+            <div class="stats-grid">
+                <a href="/oferente/habilidades" class="stat-card" style="text-decoration: none;">
+                    <div class="stat-icon">&#127919;</div>
+                    <div class="stat-label">Mis habilidades</div>
+                    <p class="text-small text-muted mt-1">Registra y administra tus competencias</p>
+                </a>
+                <a href="/oferente/mi-cv" class="stat-card" style="text-decoration: none;">
+                    <div class="stat-icon">&#128196;</div>
+                    <div class="stat-label">Mi CV</div>
+                    <p class="text-small text-muted mt-1">Sube o actualiza tu curriculum</p>
+                </a>
+                <a href="/puestos/buscar-por-caracteristicas" class="stat-card" style="text-decoration: none;">
+                    <div class="stat-icon">&#128269;</div>
+                    <div class="stat-label">Buscar puestos</div>
+                    <p class="text-small text-muted mt-1">Explora oportunidades disponibles</p>
+                </a>
             </div>
         </div>
     </div>

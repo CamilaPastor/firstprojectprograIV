@@ -1,69 +1,80 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
-<head>
-    <title>Inicio - Bolsa de Empleo</title>
-</head>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Inicio</title></head>
 <body>
     <div layout:fragment="content">
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="container">
-                <h1>Encuentra tu Empleo Ideal Hoy Mismo</h1>
-                <p>Conecta con las mejores oportunidades laborales. Miles de puestos disponibles para profesionales como tú.</p>
-                <a href="/puestos/buscar-por-caracteristicas" class="btn btn-primary btn-lg">Buscar Empleos</a>
-            </div>
-        </section>
-
-        <!-- Estadísticas -->
-        <section class="container mt-4 mb-4">
-            <div class="dash-grid">
-                <div class="dash-card">
-                    <h3>10,000+</h3>
-                    <p>Puestos Disponibles</p>
-                </div>
-                <div class="dash-card">
-                    <h3>5,000+</h3>
-                    <p>Empresas Registradas</p>
-                </div>
-                <div class="dash-card">
-                    <h3>50,000+</h3>
-                    <p>Oferentes Activos</p>
+        <div class="container">
+            <!-- Hero -->
+            <div class="hero">
+                <h1>&#128188; Bolsa de Empleo UNA</h1>
+                <p>Conectamos talento con oportunidades. Encuentra el puesto ideal o al candidato perfecto para tu empresa.</p>
+                <div class="cta-buttons">
+                    <a href="/registro/oferente" class="btn btn-primary btn-lg">Busco empleo</a>
+                    <a href="/registro/empresa" class="btn btn-outline btn-lg" style="border-color: white; color: white;">Soy empresa</a>
                 </div>
             </div>
-        </section>
 
-        <!-- Últimos Puestos -->
-        <section class="container mb-4">
-            <h2 class="text-center mb-4">Últimas Oportunidades</h2>
+            <!-- Latest jobs -->
+            <div class="page-header">
+                <h2>&#128640; Ultimos puestos disponibles</h2>
+                <p>Las oportunidades mas recientes publicadas en la plataforma</p>
+            </div>
 
-            <div th:if="${puestos != null and !puestos.isEmpty()}" class="dash-grid">
-                <div th:each="puesto : ${puestos}" class="card job-card">
-                    <h3 th:text="${puesto.descripcion}">Descripción del puesto</h3>
-                    <p><strong>Empresa:</strong> <span th:text="${puesto.empresa.nombre}">Nombre Empresa</span></p>
-                    <p><strong>Salario:</strong> <span th:text="${puesto.salario != null ? '₡ ' + #numbers.formatDecimal(puesto.salario, 0, 'COMMA', 0, 'POINT') : 'A convenir'}">Salario</span></p>
-                    <p><strong>Tipo:</strong> <span th:text="${puesto.tipoPublicacion == 'publico' ? 'Público' : 'Privado'}">Tipo</span></p>
-                    <div class="mt-4">
-                        <a th:href="@{'/puestos/buscar-por-caracteristicas?ids=' + ${puesto.caracteristicasRequeridas.stream().map(c -> c.caracteristica.idCaracteristica).toList().toString().replace('[', '').replace(']', '').replace(' ', '')}}" class="btn btn-outline btn-sm">Ver Requisitos</a>
+            <div class="features-grid" th:if="${puestos != null && !puestos.isEmpty()}">
+                <div th:each="puesto : ${puestos}" class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+                        <span class="badge badge-primary" th:text="${puesto.empresa.nombre}">Empresa</span>
+                        <span th:if="${puesto.salario != null}" style="font-weight: 700; color: #16a34a; font-size: 0.95rem;">
+                            &#8353; <span th:text="${#numbers.formatDecimal(puesto.salario, 0, 'COMMA', 2, 'POINT')}"></span>
+                        </span>
                     </div>
+                    <h3 th:text="${puesto.descripcion}" style="margin-bottom: 0.75rem;">Puesto</h3>
+
+                    <details>
+                        <summary>Ver requisitos</summary>
+                        <div class="detail-content">
+                            <ul style="list-style: none; padding: 0;">
+                                <li th:each="pc : ${puesto.caracteristicasRequeridas}" style="padding: 0.3rem 0; display: flex; justify-content: space-between;">
+                                    <span th:text="${pc.caracteristica.nombre}">Skill</span>
+                                    <span class="badge badge-info" th:text="'Nivel ' + ${pc.nivelRequerido}">Nivel</span>
+                                </li>
+                            </ul>
+                            <p th:if="${puesto.caracteristicasRequeridas == null || puesto.caracteristicasRequeridas.isEmpty()}" class="text-muted text-small">
+                                Sin requisitos especificos.
+                            </p>
+                        </div>
+                    </details>
                 </div>
             </div>
 
-            <div th:if="${puestos == null or puestos.isEmpty()}" class="text-center">
+            <div th:if="${puestos == null || puestos.isEmpty()}" class="empty-state">
+                <div class="empty-icon">&#128194;</div>
                 <p>No hay puestos disponibles en este momento.</p>
             </div>
-        </section>
 
-        <!-- CTA Banner -->
-        <section style="background: linear-gradient(135deg, var(--orange) 0%, #DC2626 100%); color: white; padding: 3rem 0; text-align: center;">
-            <div class="container">
-                <h2>¿Listo para encontrar tu próximo empleo?</h2>
-                <p>Regístrate ahora y accede a miles de oportunidades laborales.</p>
-                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="/registro/oferente" class="btn btn-primary btn-lg" style="background: white; color: var(--orange); border: 2px solid white;">Soy Candidato</a>
-                    <a href="/registro/empresa" class="btn btn-outline btn-lg" style="border: 2px solid white; color: white;">Soy Empresa</a>
+            <!-- Features info -->
+            <div class="page-header mt-4">
+                <h2>Como funciona</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">&#128100;</div>
+                    <h3>Para oferentes</h3>
+                    <p>Registra tus habilidades, sube tu CV y deja que las empresas te encuentren segun tus competencias.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#127970;</div>
+                    <h3>Para empresas</h3>
+                    <p>Publica puestos, define requisitos y encuentra candidatos con el mejor porcentaje de coincidencia.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#128202;</div>
+                    <h3>Reportes</h3>
+                    <p>Genera reportes PDF mensuales con estadisticas de puestos solicitados y tendencias del mercado.</p>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
 </body>
 </html>

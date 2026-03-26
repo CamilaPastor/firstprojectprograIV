@@ -80,7 +80,7 @@ public interface OferenteRepository extends JpaRepository<Oferente, Integer> {
      * Obtiene todos los oferentes activos
      * @return lista de oferentes activos
      */
-    @Query("SELECT o FROM Oferente o WHERE o.activo = true ORDER BY o.nombre, o.apellido ASC")
+    @Query("SELECT o FROM Oferente o WHERE o.activo = true AND o.aprobado = true ORDER BY o.nombre, o.apellido ASC")
     List<Oferente> findAllActivos();
 
     /**

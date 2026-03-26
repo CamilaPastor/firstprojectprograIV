@@ -1,65 +1,53 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
-<head>
-    <title>Iniciar Sesión - Bolsa de Empleo</title>
-</head>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Iniciar sesion</title></head>
 <body>
     <div layout:fragment="content">
-        <div class="container" style="max-width: 500px; margin: 2rem auto;">
-            <!-- Mensajes -->
+        <div class="auth-wrapper">
             <div th:if="${error}" class="alert alert-danger">
                 <span th:text="${error}"></span>
             </div>
-
             <div th:if="${success}" class="alert alert-success">
                 <span th:text="${success}"></span>
             </div>
 
-            <!-- Card de Login -->
-            <div class="card" style="padding: 2rem;">
-                <h2 class="text-center mb-4">Iniciar Sesión</h2>
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="auth-icon">&#128274;</div>
+                    <h2>Iniciar sesion</h2>
+                    <p>Ingresa tus credenciales para acceder</p>
+                </div>
 
                 <form method="post" action="/login">
-                    <!-- Tipo de usuario -->
                     <div class="form-group">
-                        <label class="form-label">Tipo de Usuario *</label>
-                        <select name="tipo" class="form-control" required>
-                            <option value="">Selecciona tu tipo</option>
-                            <option value="empresa">Empresa</option>
-                            <option value="oferente">Oferente</option>
-                            <option value="admin">Administrador</option>
-                        </select>
+                        <label class="form-label">Tipo de usuario</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="tipo" value="empresa" checked /><span>Empresa</span></label>
+                            <label><input type="radio" name="tipo" value="oferente" /><span>Oferente</span></label>
+                            <label><input type="radio" name="tipo" value="admin" /><span>Admin</span></label>
+                        </div>
                     </div>
 
-                    <!-- Usuario -->
                     <div class="form-group">
-                        <label class="form-label">Usuario *</label>
+                        <label class="form-label">Usuario</label>
                         <input type="text" name="usuario" class="form-control" required
-                               placeholder="Correo electrónico o ID" />
-                        <small style="color: #6B7280; font-size: 0.875rem;">
-                            Para empresas/oferentes: correo electrónico<br>
-                            Para administradores: identificación
-                        </small>
+                               placeholder="Correo electronico o identificacion" />
                     </div>
 
-                    <!-- Password -->
                     <div class="form-group">
-                        <label class="form-label">Contraseña *</label>
+                        <label class="form-label">Contrasena</label>
                         <input type="password" name="password" class="form-control" required
-                               placeholder="Tu contraseña" />
+                               placeholder="Tu contrasena" />
                     </div>
 
-                    <!-- Botón -->
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Iniciar Sesión</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">Entrar</button>
                 </form>
 
-                <!-- Links de registro -->
-                <div class="text-center mt-4">
-                    <p>¿No tienes cuenta?</p>
-                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                        <a href="/registro/oferente" class="btn btn-outline btn-sm">Registrar como Oferente</a>
-                        <a href="/registro/empresa" class="btn btn-outline btn-sm">Registrar como Empresa</a>
-                    </div>
+                <div class="auth-footer">
+                    No tienes cuenta?
+                    <a href="/registro/empresa">Registrate como empresa</a> o
+                    <a href="/registro/oferente">como oferente</a>
                 </div>
             </div>
         </div>

@@ -1,26 +1,31 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
-<head>
-    <title>Dashboard Empresa - Bolsa de Empleo</title>
-</head>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Empresa - Dashboard</title></head>
 <body>
     <div layout:fragment="content">
         <div class="container">
-            <h1>Bienvenido, <span th:text="${usuario.nombre}"></span></h1>
-            <p>Administra tus ofertas de empleo y encuentra los mejores candidatos.</p>
+            <div class="page-header">
+                <h1>&#127970; Panel de Empresa</h1>
+                <p>Administra tus puestos y busca los mejores candidatos</p>
+            </div>
 
-            <div class="dash-grid">
-                <div class="dash-card">
-                    <h3 th:text="${puestosActivos ?: 0}">0</h3>
-                    <p>Puestos Activos</p>
-                    <a href="/empresa/mis-puestos" class="btn btn-primary btn-sm">Ver Puestos</a>
-                </div>
-
-                <div class="dash-card">
-                    <h3>+</h3>
-                    <p>Publicar Nuevo Puesto</p>
-                    <a href="/empresa/nuevo-puesto" class="btn btn-primary btn-sm">Publicar</a>
-                </div>
+            <div class="stats-grid">
+                <a href="/empresa/mis-puestos" class="stat-card" style="text-decoration: none;">
+                    <div class="stat-icon">&#128203;</div>
+                    <div class="stat-label">Mis puestos</div>
+                    <p class="text-small text-muted mt-1">Ver todos los puestos publicados</p>
+                </a>
+                <a href="/empresa/nuevo-puesto" class="stat-card" style="text-decoration: none;">
+                    <div class="stat-icon">&#10133;</div>
+                    <div class="stat-label">Publicar puesto</div>
+                    <p class="text-small text-muted mt-1">Crear una nueva vacante</p>
+                </a>
+                <a href="/puestos/buscar-por-caracteristicas" class="stat-card" style="text-decoration: none;">
+                    <div class="stat-icon">&#128269;</div>
+                    <div class="stat-label">Buscar puestos</div>
+                    <p class="text-small text-muted mt-1">Explorar puestos del mercado</p>
+                </a>
             </div>
         </div>
     </div>

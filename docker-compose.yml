@@ -1,64 +1,30 @@
-
-
-# Definición de servicios
 services:
 
-  # =====================
-  # SERVICIO: MySQL 8.0
-  # =====================
-  mysql:
-    image: mysql:8.0
-    container_name: bolsa_empleo_mysql
+  # ==============================
+  # SERVICIO: PostgreSQL 16
+  # ==============================
+  postgres:
+    image: postgres:16-alpine
+    container_name: bolsa_empleo_postgres
     restart: always
-    
-    # Variables de entorno para MySQL
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: bolsa_empleo
-      MYSQL_USER: bolsa_user
-      MYSQL_PASSWORD: bolsa1234
-      MYSQL_ROOT_HOST: '%'
-      TZ: 'America/Costa_Rica'
-      MYSQL_LOG_CONSOLE: "true"
-    
-    # Puertos
+      POSTGRES_DB: bolsa_empleo
+      POSTGRES_USER: bolsa_user
+      POSTGRES_PASSWORD: bolsa1234
+      TZ: America/Costa_Rica
     ports:
-      - "3306:3306"
-    
-    # Volumen para persistencia de datos
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
       - ./BolsaEmpleo.sql:/docker-entrypoint-initdb.d/init.sql
-    
-    # Health check
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bolsa_user", "-pbolsa1234"]
+      test: ["CMD-SHELL", "pg_isready -U bolsa_user -d bolsa_empleo"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 15s
-    
-    # Configuración de red
+      start_period: 10s
     networks:
       - bolsa_network
-    
-    # Comandos adicionales para MySQL
-    command: >
-      --default-authentication-plugin=mysql_native_password
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_unicode_ci
-      --max_connections=1000
-      --log-error=/var/log/mysql/error.log
-    
-    # Límites de recursos
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
-          memory: 512M
 
   # ==========================
   # SERVICIO: Aplicación Spring
@@ -69,64 +35,38 @@ services:
       dockerfile: Dockerfile
     container_name: bolsa_empleo_app
     restart: unless-stopped
-    
-    # Puertos
     ports:
       - "8080:8080"
-    
-    # Variables de entorno para la conexión JDBC
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bolsa_empleo?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bolsa_empleo
       SPRING_DATASOURCE_USERNAME: bolsa_user
       SPRING_DATASOURCE_PASSWORD: bolsa1234
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
-      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
       SPRING_JPA_SHOW_SQL: "false"
       SPRING_APPLICATION_NAME: bolsa-empleo
       SPRING_PROFILES_ACTIVE: docker
       JAVA_OPTS: "-Xmx512m -Xms256m"
-      TZ: 'America/Costa_Rica'
-    
-    # Dependencia de MySQL
+      TZ: America/Costa_Rica
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
-    
-    # Volúmenes (opcional para logs)
     volumes:
       - ./logs:/app/logs
-    
-    # Configuración de red
     networks:
       - bolsa_network
-    
-    # Health check
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 60s
-    
-    # Límites de recursos
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 768M
-        reservations:
-          cpus: '0.5'
-          memory: 512M
 
-# Definición de volúmenes
 volumes:
-  mysql_data:
+  postgres_data:
     driver: local
 
-# Definición de red
 networks:
   bolsa_network:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16

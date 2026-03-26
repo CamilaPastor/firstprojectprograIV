@@ -33,7 +33,7 @@ public class Cv {
 
     @NotNull(message = "El archivo PDF es requerido")
     @Lob
-    @Column(name = "archivo_pdf", nullable = false, columnDefinition = "LONGBLOB")
+    @Column(name = "archivo_pdf", nullable = false, columnDefinition = "BYTEA")
     @ToString.Exclude
     private byte[] archivoPdf;
 

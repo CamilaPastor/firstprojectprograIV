@@ -12,11 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
 @Controller
-@RequestMapping("/public")
 @RequiredArgsConstructor
 public class PublicController {
 
@@ -25,19 +25,6 @@ public class PublicController {
     private final EmpresaService empresaService;
     private final OferenteService oferenteService;
 
-    /**
-     * Página de inicio - muestra últimos 5 puestos públicos
-     */
-    @GetMapping("/")
-    public String index(Model model) {
-        List<Puesto> puestosRecientes = puestoService.ultimos5Publicos();
-        model.addAttribute("puestos", puestosRecientes);
-        return "public/index";
-    }
-
-    /**
-     * Buscar puestos por características
-     */
     @GetMapping("/puestos/buscar-por-caracteristicas")
     public String buscarPorCaracteristicas(@RequestParam(value = "ids", required = false) List<Integer> ids, Model model) {
         List<Caracteristica> categorias = caracteristicaService.raices();
@@ -46,65 +33,83 @@ public class PublicController {
         if (ids != null && !ids.isEmpty()) {
             List<Puesto> resultados = puestoService.todosPublicosActivos().stream()
                     .filter(p -> {
-                        List<Caracteristica> caracteristicas = p.getCaracteristicasRequeridas().stream()
-                                .map(pc -> pc.getCaracteristica())
-                                .toList();
-                        return caracteristicas.stream()
-                                .anyMatch(c -> ids.contains(c.getIdCaracteristica()));
+                        if (p.getCaracteristicasRequeridas() == null) return false;
+                        return p.getCaracteristicasRequeridas().stream()
+                                .anyMatch(pc -> ids.contains(pc.getCaracteristica().getIdCaracteristica()));
                     })
                     .toList();
             model.addAttribute("puestos", resultados);
             model.addAttribute("idsSeleccionados", ids);
         }
 
-        return "puestos/buscar-caracteristicas";
+        return "public/buscar-puestos";
     }
 
-    /**
-     * Formulario de registro de empresa
-     */
     @GetMapping("/registro/empresa")
-    public String formRegistroEmpresa(Model model) {
-        model.addAttribute("empresa", new Empresa());
-        return "registro/empresa";
+    public String formRegistroEmpresa() {
+        return "public/registro-empresa";
     }
 
-    /**
-     * Registrar nueva empresa
-     */
     @PostMapping("/registro/empresa")
-    public String registroEmpresa(@ModelAttribute Empresa empresa, Model model) {
+    public String registroEmpresa(@RequestParam String nombre,
+                                  @RequestParam(required = false) String localizacion,
+                                  @RequestParam String correo,
+                                  @RequestParam(required = false) String telefono,
+                                  @RequestParam(required = false) String descripcion,
+                                  @RequestParam String password,
+                                  Model model,
+                                  RedirectAttributes attributes) {
         try {
+            Empresa empresa = new Empresa();
+            empresa.setNombre(nombre);
+            empresa.setLocalizacion(localizacion);
+            empresa.setCorreo(correo);
+            empresa.setTelefono(telefono);
+            empresa.setDescripcion(descripcion);
+            empresa.setPasswordSinHashear(password);
+
             empresaService.registrar(empresa);
-            model.addAttribute("success", "Empresa registrada exitosamente. Por favor inicia sesión.");
+            attributes.addFlashAttribute("success", "Empresa registrada exitosamente. Espera la aprobacion del administrador.");
             return "redirect:/login";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
-            return "registro/empresa";
+            return "public/registro-empresa";
         }
     }
 
-    /**
-     * Formulario de registro de oferente
-     */
     @GetMapping("/registro/oferente")
-    public String formRegistroOferente(Model model) {
-        model.addAttribute("oferente", new Oferente());
-        return "registro/oferente";
+    public String formRegistroOferente() {
+        return "public/registro-oferente";
     }
 
-    /**
-     * Registrar nuevo oferente
-     */
     @PostMapping("/registro/oferente")
-    public String registroOferente(@ModelAttribute Oferente oferente, Model model) {
+    public String registroOferente(@RequestParam String identificacion,
+                                   @RequestParam String nombre,
+                                   @RequestParam String apellido,
+                                   @RequestParam(required = false) String nacionalidad,
+                                   @RequestParam(required = false) String telefono,
+                                   @RequestParam String correo,
+                                   @RequestParam(required = false) String residencia,
+                                   @RequestParam String password,
+                                   Model model,
+                                   RedirectAttributes attributes) {
         try {
+            Oferente oferente = new Oferente();
+            oferente.setIdentificacion(identificacion);
+            oferente.setNombre(nombre);
+            oferente.setApellido(apellido);
+            oferente.setNacionalidad(nacionalidad);
+            oferente.setTelefono(telefono);
+            oferente.setCorreo(correo);
+            oferente.setResidencia(residencia);
+            oferente.setPasswordSinHashear(password);
+
             oferenteService.registrar(oferente);
-            model.addAttribute("success", "Oferente registrado exitosamente. Por favor inicia sesión.");
+            attributes.addFlashAttribute("success", "Oferente registrado exitosamente. Espera la aprobacion del administrador.");
             return "redirect:/login";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
-            return "registro/oferente";
+            return "public/registro-oferente";
         }
     }
 }

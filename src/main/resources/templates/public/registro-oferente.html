@@ -1,85 +1,63 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.thymeleaf.org" lang="es">
-<head>
-    <title>Registro Oferente - Bolsa de Empleo</title>
-</head>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Registro Oferente</title></head>
 <body>
     <div layout:fragment="content">
-        <div class="container" style="max-width: 600px; margin: 2rem auto;">
-            <!-- Mensajes -->
+        <div class="auth-wrapper" style="max-width: 540px;">
             <div th:if="${error}" class="alert alert-danger">
                 <span th:text="${error}"></span>
             </div>
 
-            <!-- Card de Registro -->
-            <div class="card" style="padding: 2rem;">
-                <h2 class="text-center mb-4">Registro de Oferente</h2>
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="auth-icon">&#128100;</div>
+                    <h2>Registro de Oferente</h2>
+                    <p>Crea tu perfil profesional y conecta con empresas</p>
+                </div>
 
                 <form method="post" action="/registro/oferente">
-                    <!-- Identificación -->
                     <div class="form-group">
-                        <label class="form-label">Cédula o Identificación *</label>
-                        <input type="text" name="identificacion" class="form-control" required
-                               placeholder="123456789" pattern="[0-9]{8,20}"
-                               title="Solo números, entre 8 y 20 dígitos" />
+                        <label class="form-label">Cedula o Identificacion *</label>
+                        <input type="text" name="identificacion" class="form-control" required placeholder="123456789" />
                     </div>
-
-                    <!-- Nombre -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Nombre *</label>
+                            <input type="text" name="nombre" class="form-control" required placeholder="Tu nombre" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Primer Apellido *</label>
+                            <input type="text" name="apellido" class="form-control" required placeholder="Tu apellido" />
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Nacionalidad</label>
+                            <input type="text" name="nacionalidad" class="form-control" placeholder="Costarricense" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telefono</label>
+                            <input type="tel" name="telefono" class="form-control" placeholder="+506 8888-9999" />
+                        </div>
+                    </div>
                     <div class="form-group">
-                        <label class="form-label">Nombre *</label>
-                        <input type="text" name="nombre" class="form-control" required
-                               placeholder="Tu nombre" />
+                        <label class="form-label">Correo Electronico *</label>
+                        <input type="email" name="correo" class="form-control" required placeholder="tu@email.com" />
                     </div>
-
-                    <!-- Apellido -->
                     <div class="form-group">
-                        <label class="form-label">Apellido *</label>
-                        <input type="text" name="apellido" class="form-control" required
-                               placeholder="Tu apellido" />
+                        <label class="form-label">Lugar de Residencia</label>
+                        <input type="text" name="residencia" class="form-control" placeholder="San Jose" />
                     </div>
-
-                    <!-- Nacionalidad -->
                     <div class="form-group">
-                        <label class="form-label">Nacionalidad</label>
-                        <input type="text" name="nacionalidad" class="form-control"
-                               placeholder="Costarricense" />
+                        <label class="form-label">Contrasena *</label>
+                        <input type="password" name="password" class="form-control" required placeholder="Minimo 6 caracteres" />
                     </div>
-
-                    <!-- Teléfono -->
-                    <div class="form-group">
-                        <label class="form-label">Teléfono</label>
-                        <input type="tel" name="telefono" class="form-control"
-                               placeholder="+506 8888-9999" />
-                    </div>
-
-                    <!-- Correo -->
-                    <div class="form-group">
-                        <label class="form-label">Correo Electrónico *</label>
-                        <input type="email" name="correo" class="form-control" required
-                               placeholder="tu.email@ejemplo.com" />
-                    </div>
-
-                    <!-- Residencia -->
-                    <div class="form-group">
-                        <label class="form-label">País de Residencia</label>
-                        <input type="text" name="residencia" class="form-control"
-                               placeholder="Costa Rica" />
-                    </div>
-
-                    <!-- Password -->
-                    <div class="form-group">
-                        <label class="form-label">Contraseña *</label>
-                        <input type="password" name="password" class="form-control" required
-                               placeholder="Mínimo 6 caracteres" />
-                    </div>
-
-                    <!-- Botón -->
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Registrar Oferente</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">Registrar Oferente</button>
                 </form>
 
-                <!-- Link a login -->
-                <div class="text-center mt-4">
-                    <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+                <div class="auth-footer">
+                    Ya tienes cuenta? <a href="/login">Inicia sesion</a>
                 </div>
             </div>
         </div>
