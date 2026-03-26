@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Buscar puestos por caracteristicas</title></head>
+<body>
+    <div layout:fragment="content">
+        <div class="container" style="padding: 2rem 0;">
+            <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+                <h2>Buscar puestos por caracteristicas</h2>
+
+                <form method="get" action="/puestos/buscar-por-caracteristicas">
+                    <div th:each="categoria : ${categorias}" style="margin-bottom: 1rem;">
+                        <strong th:text="${categoria.nombre}" style="display: block; margin-bottom: 0.3rem;"></strong>
+                        <div th:if="${categoria.hijos != null && !categoria.hijos.isEmpty()}" style="padding-left: 1rem;">
+                            <div th:each="sub : ${categoria.hijos}" style="margin-bottom: 0.2rem;">
+                                <label style="cursor: pointer;">
+                                    <input type="checkbox" name="ids" th:value="${sub.idCaracteristica}" />
+                                    <span th:text="${sub.nombre}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                        <a href="/puestos/buscar-por-caracteristicas" class="btn btn-secondary">Limpiar</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Resultados -->
+            <div th:if="${puestos != null}">
+                <h3>Resultados</h3>
+                <div th:if="${puestos.isEmpty()}" style="padding: 1rem;">
+                    <p>No se encontraron puestos que coincidan.</p>
+                </div>
+                <div th:if="${!puestos.isEmpty()}" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;">
+                    <div th:each="puesto : ${puestos}" class="card" style="padding: 1rem;">
+                        <p style="font-weight: bold;" th:text="${puesto.empresa.nombre}">Empresa</p>
+                        <h4 th:text="${puesto.descripcion}">Puesto</h4>
+                        <p>Salario: <span th:text="${puesto.salario != null ? puesto.salario : 'N/A'}"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

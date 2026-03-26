@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Registro Empresa</title></head>
+<body>
+    <div layout:fragment="content">
+        <div class="container" style="max-width: 600px; margin: 2rem auto;">
+            <div th:if="${error}" style="background: #fef2f2; color: #dc2626; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                <span th:text="${error}"></span>
+            </div>
+
+            <div class="card" style="padding: 2rem;">
+                <h2 style="text-align: center; margin-bottom: 1.5rem;">Registro de Empresa</h2>
+                <form method="post" action="/registro/empresa">
+                    <div class="form-group">
+                        <label class="form-label">Nombre de la Empresa *</label>
+                        <input type="text" name="nombre" class="form-control" required placeholder="Nombre completo" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Localizacion</label>
+                        <input type="text" name="localizacion" class="form-control" placeholder="Ciudad, Provincia" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Correo Electronico *</label>
+                        <input type="email" name="correo" class="form-control" required placeholder="contacto@empresa.com" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Telefono</label>
+                        <input type="tel" name="telefono" class="form-control" placeholder="+506 2222-3333" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Descripcion</label>
+                        <textarea name="descripcion" class="form-control" rows="3" placeholder="Describe tu empresa"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contrasena *</label>
+                        <input type="password" name="password" class="form-control" required placeholder="Minimo 6 caracteres" />
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Registrar Empresa</button>
+                </form>
+                <p style="text-align: center; margin-top: 1rem;">Ya tienes cuenta? <a href="/login">Inicia sesion</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

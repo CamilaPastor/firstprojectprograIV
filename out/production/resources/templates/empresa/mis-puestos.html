@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Empresa - Mis puestos</title></head>
+<body>
+    <div layout:fragment="content">
+        <div class="container" style="padding: 2rem 0;">
+            <h1>Mis puestos</h1>
+            <a href="/empresa/nuevo-puesto" class="btn btn-primary" style="margin-bottom: 1rem; display: inline-block;">Publicar puesto</a>
+
+            <div th:if="${success}" style="background: #f0fdf4; color: #16a34a; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" style="background: #fef2f2; color: #dc2626; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                <span th:text="${error}"></span>
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;" class="table">
+                <thead>
+                    <tr style="background: #f3f4f6; text-align: left;">
+                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">ID</th>
+                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Descripcion</th>
+                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Salario</th>
+                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Activo</th>
+                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="puesto : ${puestos}" style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 0.75rem;" th:text="${puesto.idPuesto}"></td>
+                        <td style="padding: 0.75rem;" th:text="${puesto.descripcion}"></td>
+                        <td style="padding: 0.75rem;" th:text="${puesto.salario}"></td>
+                        <td style="padding: 0.75rem;">
+                            <span th:if="${puesto.activo}" style="color: green;">&#10004;</span>
+                            <span th:unless="${puesto.activo}" style="color: red;">&#10006;</span>
+                        </td>
+                        <td style="padding: 0.75rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <form th:if="${puesto.activo}" method="post" action="/empresa/desactivar" style="display: inline;">
+                                    <input type="hidden" name="idPuesto" th:value="${puesto.idPuesto}" />
+                                    <button type="submit" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.3rem 0.6rem;">Desactivar</button>
+                                </form>
+                                <a th:href="@{'/empresa/buscar-candidatos?idPuesto=' + ${puesto.idPuesto}}" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.3rem 0.6rem;">Buscar candidatos</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${puestos == null || puestos.isEmpty()}" style="padding: 2rem; text-align: center;">
+                <p>No tienes puestos registrados aun.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

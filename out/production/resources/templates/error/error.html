@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Error</title></head>
+<body>
+    <div layout:fragment="content">
+        <div class="container" style="text-align: center; padding: 3rem;">
+            <h1>Error</h1>
+            <p th:text="${error != null ? error : 'Ha ocurrido un error inesperado.'}"></p>
+            <a href="/" class="btn btn-primary">Volver al inicio</a>
+        </div>
+    </div>
+</body>
+</html>

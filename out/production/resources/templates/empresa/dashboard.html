@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Empresa - Dashboard</title></head>
+<body>
+    <div layout:fragment="content">
+        <div class="container" style="padding: 2rem 0;">
+            <h1>Empresa - Dashboard</h1>
+            <p>Desde aqui puedes administrar tus puestos y buscar candidatos.</p>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <a href="/empresa/mis-puestos" class="btn btn-primary">Ver mis puestos</a>
+                <a href="/empresa/nuevo-puesto" class="btn btn-primary">Publicar nuevo puesto</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Oferente - Mi CV</title></head>
+<body>
+    <div layout:fragment="content">
+        <div class="container" style="max-width: 600px; margin: 0 auto;">
+            <div th:if="${success}" class="alert alert-success">
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-danger">
+                <span th:text="${error}"></span>
+            </div>
+
+            <div class="page-header">
+                <h1>&#128196; Mi CV</h1>
+                <p>Sube tu curriculum en formato PDF para que las empresas puedan descargarlo</p>
+            </div>
+
+            <!-- Current CV info -->
+            <div th:if="${tieneCv}" class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2.5rem;">&#128196;</div>
+                    <div>
+                        <p style="font-weight: 600; color: var(--gray-900);" th:text="${cv.nombreArchivo}">archivo.pdf</p>
+                        <p class="text-small text-muted">Subido: <span th:text="${#temporals.format(cv.fechaSubida, 'dd/MM/yyyy HH:mm')}"></span></p>
+                    </div>
+                </div>
+                <a th:href="@{'/oferente/descargar-cv/' + ${usuario.id}}" class="btn btn-primary mt-2">Descargar CV</a>
+            </div>
+
+            <div th:unless="${tieneCv}" class="card" style="padding: 2rem; margin-bottom: 1.5rem; text-align: center;">
+                <div style="font-size: 3rem; color: var(--gray-300);">&#128196;</div>
+                <p class="text-muted mt-1">Aun no has subido tu CV.</p>
+            </div>
+
+            <!-- Upload form -->
+            <div class="card" style="padding: 2rem;">
+                <h3 th:text="${tieneCv ? 'Actualizar CV' : 'Subir CV'}" style="margin-bottom: 1rem;"></h3>
+                <form method="post" action="/oferente/subir-cv" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="form-label">Archivo PDF (max 5MB) *</label>
+                        <input type="file" name="archivo" class="form-control" accept="application/pdf" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Subir CV</button>
+                </form>
+            </div>
+
+            <a href="/oferente/dashboard" class="btn btn-secondary mt-2">&#8592; Volver al dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

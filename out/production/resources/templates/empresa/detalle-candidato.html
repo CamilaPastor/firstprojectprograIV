@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Empresa - Detalle candidato</title></head>
+<body>
+    <div layout:fragment="content">
+        <div class="container" style="padding: 2rem 0;">
+            <h1>Detalle de oferente</h1>
+
+            <div class="card" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+                <h3 th:text="${oferente.nombre + ' ' + oferente.apellido}"></h3>
+                <p><strong>Identificacion:</strong> <span th:text="${oferente.identificacion}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${oferente.correo}"></span></p>
+                <p><strong>Telefono:</strong> <span th:text="${oferente.telefono != null ? oferente.telefono : 'N/A'}"></span></p>
+                <p><strong>Residencia:</strong> <span th:text="${oferente.residencia != null ? oferente.residencia : 'N/A'}"></span></p>
+            </div>
+
+            <h3>Habilidades</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f3f4f6; text-align: left;">
+                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Caracteristica</th>
+                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Nivel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="oc : ${habilidades}" style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 0.75rem;" th:text="${oc.caracteristica.nombre}"></td>
+                        <td style="padding: 0.75rem;" th:text="${oc.nivel}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${tieneCv}" style="margin-top: 1.5rem;">
+                <a th:href="@{'/empresa/descargar-cv/' + ${oferente.idOferente}}" class="btn btn-primary">Descargar CV</a>
+            </div>
+
+            <a href="/empresa/mis-puestos" class="btn btn-secondary" style="margin-top: 1rem;">Volver</a>
+        </div>
+    </div>
+</body>
+</html>

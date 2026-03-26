@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Empresa - Candidatos</title></head>
+<body>
+    <div layout:fragment="content">
+        <div class="container" style="padding: 2rem 0;">
+            <h1>Candidatos para el puesto</h1>
+            <p th:if="${puesto != null}"><strong>Puesto:</strong> <span th:text="${puesto.descripcion}"></span></p>
+
+            <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+                <thead>
+                    <tr style="background: #f3f4f6; text-align: left;">
+                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Oferente</th>
+                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Requisitos cumplidos</th>
+                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">% Coincidencia</th>
+                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="rc : ${candidatos}" style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 0.75rem;" th:text="${rc.oferente.nombre + ' ' + rc.oferente.apellido}"></td>
+                        <td style="padding: 0.75rem;" th:text="${rc.cumplidos + ' / ' + rc.total}"></td>
+                        <td style="padding: 0.75rem;" th:text="${#numbers.formatDecimal(rc.porcentaje, 0, 'COMMA', 2, 'POINT') + '%'}"></td>
+                        <td style="padding: 0.75rem;">
+                            <a th:href="@{'/empresa/detalle-candidato/' + ${rc.oferente.idOferente}}" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.3rem 0.6rem;">Ver detalle</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${candidatos == null || candidatos.isEmpty()}" style="padding: 2rem; text-align: center;">
+                <p>No se encontraron candidatos.</p>
+            </div>
+
+            <a href="/empresa/mis-puestos" class="btn btn-secondary" style="margin-top: 1rem;">Volver</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Oferente - Habilidades</title></head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div th:if="${success}" class="alert alert-success">
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-danger">
+                <span th:text="${error}"></span>
+            </div>
+
+            <div class="page-header">
+                <h1>&#127919; Mis habilidades</h1>
+                <p>Registra tus competencias para que las empresas puedan encontrarte</p>
+            </div>
+
+            <div class="split-layout">
+                <!-- Left: current skills + navigation -->
+                <div>
+                    <!-- Skills table -->
+                    <div class="card" style="padding: 1.5rem; margin-bottom: 1rem;">
+                        <h3 style="margin-bottom: 1rem;">Habilidades registradas</h3>
+                        <div th:if="${habilidades != null && !habilidades.isEmpty()}" class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Caracteristica</th>
+                                        <th>Nivel</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="oc : ${habilidades}">
+                                        <td th:text="${oc.caracteristica.nombre}" style="font-weight: 500;"></td>
+                                        <td>
+                                            <div class="level-bar">
+                                                <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                                                    <div th:class="${i <= oc.nivel ? 'level-dot filled' : 'level-dot'}"></div>
+                                                </th:block>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <form method="post" action="/oferente/eliminar-habilidad" class="inline">
+                                                <input type="hidden" name="idCaracteristica" th:value="${oc.caracteristica.idCaracteristica}" />
+                                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div th:if="${habilidades == null || habilidades.isEmpty()}" class="empty-state" style="padding: 1.5rem;">
+                            <p>No tienes habilidades registradas aun.</p>
+                        </div>
+                    </div>
+
+                    <!-- Category navigation -->
+                    <div class="card" style="padding: 1.5rem;">
+                        <h3 style="margin-bottom: 0.75rem;">Navegar categorias</h3>
+
+                        <!-- Breadcrumb -->
+                        <div class="breadcrumb">
+                            <a href="/oferente/habilidades">Raices</a>
+                            <span th:if="${categoriaActual != null}" class="breadcrumb-sep">/</span>
+                            <th:block th:if="${categoriaActual != null}">
+                                <a th:if="${categoriaActual.padre != null}"
+                                   th:href="@{'/oferente/habilidades?actualId=' + ${categoriaActual.padre.idCaracteristica}}"
+                                   th:text="${categoriaActual.padre.nombre}"></a>
+                                <span th:if="${categoriaActual.padre != null}" class="breadcrumb-sep">/</span>
+                                <span class="breadcrumb-current" th:text="${categoriaActual.nombre}"></span>
+                            </th:block>
+                        </div>
+
+                        <!-- Subcategories of current -->
+                        <div th:if="${subcategorias != null && !subcategorias.isEmpty()}" class="category-nav">
+                            <a th:each="sub : ${subcategorias}"
+                               th:if="${sub.hijos != null && !sub.hijos.isEmpty()}"
+                               th:href="@{'/oferente/habilidades?actualId=' + ${sub.idCaracteristica}}"
+                               class="category-chip" th:text="${sub.nombre}"></a>
+                            <span th:each="sub : ${subcategorias}"
+                                  th:unless="${sub.hijos != null && !sub.hijos.isEmpty()}"
+                                  class="category-chip" th:text="${sub.nombre}"></span>
+                        </div>
+
+                        <!-- Root categories -->
+                        <div th:if="${actualId == null}" class="category-nav">
+                            <a th:each="raiz : ${raices}"
+                               th:href="@{'/oferente/habilidades?actualId=' + ${raiz.idCaracteristica}}"
+                               class="category-chip" th:text="${raiz.nombre}"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: add skill form -->
+                <div class="card" style="padding: 2rem; align-self: start;">
+                    <h3 style="margin-bottom: 1rem;">&#10133; Agregar Habilidad</h3>
+                    <form method="post" action="/oferente/agregar-habilidad">
+                        <div class="form-group">
+                            <label class="form-label">Caracteristica</label>
+                            <select name="idCaracteristica" class="form-control" required>
+                                <option value="">Selecciona una habilidad...</option>
+                                <th:block th:if="${subcategorias != null && !subcategorias.isEmpty()}">
+                                    <option th:each="sub : ${subcategorias}" th:value="${sub.idCaracteristica}" th:text="${sub.nombre}"></option>
+                                </th:block>
+                                <th:block th:if="${subcategorias == null || subcategorias.isEmpty()}">
+                                    <th:block th:each="raiz : ${raices}">
+                                        <optgroup th:label="${raiz.nombre}">
+                                            <option th:each="h : ${raiz.hijos}" th:value="${h.idCaracteristica}" th:text="${h.nombre}"></option>
+                                        </optgroup>
+                                    </th:block>
+                                </th:block>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nivel (1 = basico, 5 = experto)</label>
+                            <input type="number" name="nivel" class="form-control" min="1" max="5" value="3" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Agregar habilidad</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

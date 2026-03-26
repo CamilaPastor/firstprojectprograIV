@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Login</title></head>
+<body>
+    <div layout:fragment="content">
+        <div class="container" style="max-width: 450px; margin: 3rem auto;">
+            <div th:if="${error}" class="alert alert-danger" style="background: #fef2f2; color: #dc2626; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                <span th:text="${error}"></span>
+            </div>
+            <div th:if="${success}" class="alert alert-success" style="background: #f0fdf4; color: #16a34a; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                <span th:text="${success}"></span>
+            </div>
+
+            <div class="card" style="padding: 2rem; text-align: center;">
+                <h2>Login</h2>
+                <div style="font-size: 3rem; margin: 1rem 0;">&#128100;</div>
+
+                <form method="post" action="/login" style="text-align: left;">
+                    <div class="form-group">
+                        <label class="form-label">Usuario</label>
+                        <input type="text" name="usuario" class="form-control" required
+                               placeholder="Correo electronico o identificacion" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Contrasena</label>
+                        <input type="password" name="password" class="form-control" required
+                               placeholder="Tu contrasena" />
+                    </div>
+
+                    <div class="form-group" style="display: none;">
+                        <select name="tipo" id="tipoSelect">
+                            <option value="empresa">Empresa</option>
+                            <option value="oferente">Oferente</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+
+                    <!-- Radio buttons for user type - visible -->
+                    <div class="form-group">
+                        <label class="form-label">Tipo de usuario</label>
+                        <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                            <label style="cursor: pointer;"><input type="radio" name="tipo" value="empresa" checked /> Empresa</label>
+                            <label style="cursor: pointer;"><input type="radio" name="tipo" value="oferente" /> Oferente</label>
+                            <label style="cursor: pointer;"><input type="radio" name="tipo" value="admin" /> Admin</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Entrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Admin - Empresas pendientes</title></head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div th:if="${success}" class="alert alert-success">
+                <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-danger">
+                <span th:text="${error}"></span>
+            </div>
+
+            <div class="page-header">
+                <h1>&#127970; Empresas pendientes de aprobacion</h1>
+                <p>Revisa y aprueba las cuentas de empresa registradas</p>
+            </div>
+
+            <div th:if="${empresas != null && !empresas.isEmpty()}" class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Localizacion</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="empresa : ${empresas}">
+                            <td th:text="${empresa.nombre}" style="font-weight: 600;"></td>
+                            <td th:text="${empresa.correo}"></td>
+                            <td th:text="${empresa.localizacion != null ? empresa.localizacion : 'N/A'}"></td>
+                            <td>
+                                <form method="post" action="/admin/aprobar-empresa" class="inline">
+                                    <input type="hidden" name="idEmpresa" th:value="${empresa.idEmpresa}" />
+                                    <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:if="${empresas == null || empresas.isEmpty()}" class="empty-state">
+                <div class="empty-icon">&#9989;</div>
+                <p>No hay empresas pendientes de aprobacion.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

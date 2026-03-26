@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Admin - Dashboard</title></head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="page-header">
+                <h1>&#128736; Panel de Administrador</h1>
+                <p>Gestiona aprobaciones, catalogo de caracteristicas y genera reportes</p>
+            </div>
+
+            <div class="stats-grid">
+                <a href="/admin/empresas-pendientes" class="stat-card" style="text-decoration: none;">
+                    <div class="stat-icon">&#127970;</div>
+                    <div class="stat-label">Empresas pendientes</div>
+                    <p class="text-small text-muted mt-1">Aprobar cuentas de empresa</p>
+                </a>
+                <a href="/admin/oferentes-pendientes" class="stat-card" style="text-decoration: none;">
+                    <div class="stat-icon">&#128101;</div>
+                    <div class="stat-label">Oferentes pendientes</div>
+                    <p class="text-small text-muted mt-1">Aprobar cuentas de oferente</p>
+                </a>
+                <a href="/admin/caracteristicas" class="stat-card" style="text-decoration: none;">
+                    <div class="stat-icon">&#127919;</div>
+                    <div class="stat-label">Caracteristicas</div>
+                    <p class="text-small text-muted mt-1">Administrar catalogo de habilidades</p>
+                </a>
+                <a href="/admin/reportes" class="stat-card" style="text-decoration: none;">
+                    <div class="stat-icon">&#128202;</div>
+                    <div class="stat-label">Reportes</div>
+                    <p class="text-small text-muted mt-1">Generar reportes PDF mensuales</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
