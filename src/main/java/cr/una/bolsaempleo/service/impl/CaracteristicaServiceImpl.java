@@ -77,4 +77,14 @@ public class CaracteristicaServiceImpl implements CaracteristicaService {
     public List<Caracteristica> hijosActivos(Integer idPadre) {
         return caracteristicaRepository.findActiveHijos(idPadre);
     }
+
+    @Override
+    public void eliminar(Integer idCaracteristica) {
+        Caracteristica caracteristica = caracteristicaRepository.findById(idCaracteristica)
+                .orElseThrow(() -> new IllegalArgumentException("Característica no encontrada"));
+
+        // Soft delete: desactivar en lugar de borrar
+        caracteristica.setActivo(false);
+        caracteristicaRepository.save(caracteristica);
+    }
 }

@@ -93,21 +93,21 @@ CREATE TABLE IF NOT EXISTS oferente_caracteristica (
 
 -- Administrador (contraseña: admin123)
 INSERT INTO administrador (identificacion, password_hash, activo) VALUES
-('admin', '$2b$10$Ib0oUgZlKbmm0rrYfZwjeObtJIEmpP33anjKD0gSBgkg.Bd3kp1eq', TRUE)
+('admin', '$2a$10$pm1ju4TgoIsLohvQ/n26UeQJIhba.DLS6PTHiznKNA9vvnQI3UTqa', TRUE)
 ON CONFLICT (identificacion) DO NOTHING;
 
 -- Empresas aprobadas (contraseña: empresa123)
 INSERT INTO empresa (nombre, localizacion, correo, telefono, descripcion, password_hash, aprobado, activo) VALUES
-('TechSolutions S.A.', 'San José, Costa Rica', 'info@techsolutions.cr', '+506-2234-5678', 'Empresa de consultoría en tecnología de la información', '$2b$10$KyMqRUMi5SCfUl2cApUgb.bU4Im/eJ4i80LC3pugvoqCKW9DeXRqm', TRUE, TRUE),
-('Innovate Digital', 'San José, Costa Rica', 'contact@innovate.cr', '+506-8765-4321', 'Desarrolladora de soluciones web y móviles', '$2b$10$KyMqRUMi5SCfUl2cApUgb.bU4Im/eJ4i80LC3pugvoqCKW9DeXRqm', TRUE, TRUE),
-('CloudServices Inc', 'Heredia, Costa Rica', 'support@cloudservices.cr', '+506-2345-6789', 'Proveedor de servicios en la nube', '$2b$10$KyMqRUMi5SCfUl2cApUgb.bU4Im/eJ4i80LC3pugvoqCKW9DeXRqm', TRUE, TRUE)
+('TechSolutions S.A.', 'San José, Costa Rica', 'info@techsolutions.cr', '+506-2234-5678', 'Empresa de consultoría en tecnología de la información', '$2a$10$8oQcCXvvNW5CQMUtSJbALui0Ns.kH.OeWPZ66fSuCTT16QYrNfsCu', TRUE, TRUE),
+('Innovate Digital', 'San José, Costa Rica', 'contact@innovate.cr', '+506-8765-4321', 'Desarrolladora de soluciones web y móviles', '$2a$10$8oQcCXvvNW5CQMUtSJbALui0Ns.kH.OeWPZ66fSuCTT16QYrNfsCu', TRUE, TRUE),
+('CloudServices Inc', 'Heredia, Costa Rica', 'support@cloudservices.cr', '+506-2345-6789', 'Proveedor de servicios en la nube', '$2a$10$8oQcCXvvNW5CQMUtSJbALui0Ns.kH.OeWPZ66fSuCTT16QYrNfsCu', TRUE, TRUE)
 ON CONFLICT (correo) DO NOTHING;
 
 -- Oferentes aprobados (contraseña: oferente123)
 INSERT INTO oferente (identificacion, nombre, apellido, nacionalidad, telefono, correo, residencia, password_hash, aprobado, activo) VALUES
-('118456789', 'Juan', 'Pérez López', 'Costarricense', '+506-8765-4321', 'juan.perez@gmail.com', 'San José', '$2b$10$hGmgDFMQ/hLacHF4S54fnebkAL0QAyE78cgl7.fB6Sfy5RqUHF2m6', TRUE, TRUE),
-('117234567', 'María', 'González Rodríguez', 'Costarricense', '+506-8234-5678', 'maria.gonzalez@gmail.com', 'Heredia', '$2b$10$hGmgDFMQ/hLacHF4S54fnebkAL0QAyE78cgl7.fB6Sfy5RqUHF2m6', TRUE, TRUE),
-('119876543', 'Carlos', 'Ramírez Méndez', 'Nicaragüense', '+506-8987-6543', 'carlos.ramirez@gmail.com', 'San Pedro', '$2b$10$hGmgDFMQ/hLacHF4S54fnebkAL0QAyE78cgl7.fB6Sfy5RqUHF2m6', TRUE, TRUE)
+('118456789', 'Juan', 'Pérez López', 'Costarricense', '+506-8765-4321', 'juan.perez@gmail.com', 'San José', '$2a$10$4.JnM4WEUQkLaxQljbMV4eqjm5iQtT339MH7yL8CiTsDIBcgBQ9na', TRUE, TRUE),
+('117234567', 'María', 'González Rodríguez', 'Costarricense', '+506-8234-5678', 'maria.gonzalez@gmail.com', 'Heredia', '$2a$10$4.JnM4WEUQkLaxQljbMV4eqjm5iQtT339MH7yL8CiTsDIBcgBQ9na', TRUE, TRUE),
+('119876543', 'Carlos', 'Ramírez Méndez', 'Nicaragüense', '+506-8987-6543', 'carlos.ramirez@gmail.com', 'San Pedro', '$2a$10$4.JnM4WEUQkLaxQljbMV4eqjm5iQtT339MH7yL8CiTsDIBcgBQ9na', TRUE, TRUE)
 ON CONFLICT (identificacion) DO NOTHING;
 
 -- Características raíces

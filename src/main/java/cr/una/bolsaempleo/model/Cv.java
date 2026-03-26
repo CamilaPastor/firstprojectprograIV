@@ -47,7 +47,7 @@ public class Cv {
     private LocalDateTime fechaSubida;
 
     @Column(name = "fecha_actualizacion", nullable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime fechaActualizacion;
 
     @PrePersist

@@ -4,76 +4,77 @@
 <head><title>Admin - Caracteristicas</title></head>
 <body>
     <div layout:fragment="content">
-        <div class="container" style="padding: 2rem 0;">
-            <div th:if="${success}" style="background: #f0fdf4; color: #16a34a; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+        <div class="container">
+            <div th:if="${success}" class="alert alert-success">
                 <span th:text="${success}"></span>
             </div>
-            <div th:if="${error}" style="background: #fef2f2; color: #dc2626; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+            <div th:if="${error}" class="alert alert-danger">
                 <span th:text="${error}"></span>
             </div>
 
-            <h1>Caracteristicas</h1>
+            <div class="page-header">
+                <h1>&#127919; Catalogo de Caracteristicas</h1>
+                <p>Administra las categorias y habilidades del sistema</p>
+            </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div class="split-layout">
                 <!-- Left: navigation tree -->
                 <div>
-                    <!-- Breadcrumb / Ruta -->
-                    <div style="margin-bottom: 1rem;">
-                        <strong>Ruta:</strong>
-                        <a href="/admin/caracteristicas" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.2rem 0.5rem;">Raices</a>
-                        <span th:if="${categoriaActual != null}">
-                            <span th:if="${categoriaActual.padre != null}">
-                                / <a th:href="@{'/admin/caracteristicas?actualId=' + ${categoriaActual.padre.idCaracteristica}}"
-                                     class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.2rem 0.5rem;"
-                                     th:text="${categoriaActual.padre.nombre}"></a>
-                            </span>
-                            / <span class="btn btn-primary" style="font-size: 0.8rem; padding: 0.2rem 0.5rem;"
-                                    th:text="${categoriaActual.nombre}"></span>
-                        </span>
+                    <!-- Breadcrumb -->
+                    <div class="breadcrumb">
+                        <a href="/admin/caracteristicas">Raices</a>
+                        <span th:if="${categoriaActual != null}" class="breadcrumb-sep">/</span>
+                        <th:block th:if="${categoriaActual != null}">
+                            <a th:if="${categoriaActual.padre != null}"
+                               th:href="@{'/admin/caracteristicas?actualId=' + ${categoriaActual.padre.idCaracteristica}}"
+                               th:text="${categoriaActual.padre.nombre}"></a>
+                            <span th:if="${categoriaActual.padre != null}" class="breadcrumb-sep">/</span>
+                            <span class="breadcrumb-current" th:text="${categoriaActual.nombre}"></span>
+                        </th:block>
                     </div>
 
-                    <!-- Show subcategorias if navigating into a parent -->
-                    <div th:if="${subcategorias != null}" style="margin-top: 1rem;">
-                        <p th:text="'Subcategorias de ' + ${categoriaActual.nombre} + ':'"></p>
-                        <div th:each="sub : ${subcategorias}" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem;">
+                    <!-- Subcategories when navigating -->
+                    <div th:if="${subcategorias != null}" class="card" style="padding: 1.5rem;">
+                        <h3 th:text="'Subcategorias de ' + ${categoriaActual.nombre}" style="margin-bottom: 1rem;"></h3>
+                        <div th:each="sub : ${subcategorias}" style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--gray-100);">
                             <a th:href="@{'/admin/caracteristicas?actualId=' + ${sub.idCaracteristica}}"
-                               th:text="${sub.nombre}" style="font-weight: bold;"></a>
-                            <form method="post" action="/admin/eliminar-caracteristica" style="display: inline;">
+                               th:text="${sub.nombre}" style="font-weight: 600;"></a>
+                            <form method="post" action="/admin/eliminar-caracteristica" class="inline">
                                 <input type="hidden" name="idCaracteristica" th:value="${sub.idCaracteristica}" />
-                                <button type="submit" class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.15rem 0.4rem;">Eliminar</button>
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                             </form>
                         </div>
-                        <div th:if="${subcategorias.isEmpty()}" style="color: #6b7280;">
+                        <div th:if="${subcategorias.isEmpty()}" class="text-muted" style="padding: 1rem 0;">
                             Esta categoria no tiene subcategorias aun.
                         </div>
                     </div>
 
-                    <!-- Show root categories -->
-                    <div th:if="${actualId == null}">
-                        <p><strong>Categorias raices:</strong></p>
-                        <div th:each="raiz : ${raices}" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <!-- Root categories -->
+                    <div th:if="${actualId == null}" class="card" style="padding: 1.5rem;">
+                        <h3 style="margin-bottom: 1rem;">Categorias raices</h3>
+                        <div th:each="raiz : ${raices}" style="display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid var(--gray-100);">
                             <a th:href="@{'/admin/caracteristicas?actualId=' + ${raiz.idCaracteristica}}"
-                               th:text="${raiz.nombre}" style="font-weight: bold; font-size: 1.1rem;"></a>
-                            <form method="post" action="/admin/eliminar-caracteristica" style="display: inline;">
+                               th:text="${raiz.nombre}" style="font-weight: 600; font-size: 1.05rem;"></a>
+                            <form method="post" action="/admin/eliminar-caracteristica" class="inline">
                                 <input type="hidden" name="idCaracteristica" th:value="${raiz.idCaracteristica}" />
-                                <button type="submit" class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.15rem 0.4rem;">Eliminar</button>
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                             </form>
                         </div>
                     </div>
                 </div>
 
                 <!-- Right: create form -->
-                <div class="card" style="padding: 1.5rem; height: fit-content;">
-                    <h3>Agregar Caracteristica</h3>
+                <div class="card" style="padding: 2rem; align-self: start;">
+                    <h3 style="margin-bottom: 1rem;">&#10133; Agregar Caracteristica</h3>
                     <form method="post" action="/admin/crear-caracteristica">
                         <div class="form-group">
-                            <label class="form-label">Nombre</label>
+                            <label class="form-label">Nombre *</label>
                             <input type="text" name="nombre" class="form-control" required placeholder="Nombre de la caracteristica" />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Padre</label>
+                            <label class="form-label">Categoria padre</label>
                             <select name="idPadre" class="form-control">
-                                <option value="">(sin padre)</option>
+                                <option value="">(Raiz - sin padre)</option>
                                 <th:block th:each="raiz : ${raices}">
                                     <option th:value="${raiz.idCaracteristica}" th:text="${raiz.nombre}"
                                             th:selected="${actualId != null && raiz.idCaracteristica == actualId}"></option>
@@ -82,7 +83,7 @@
                                 </th:block>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">Crear</button>
+                        <button type="submit" class="btn btn-primary btn-block">Crear caracteristica</button>
                     </form>
                 </div>
             </div>

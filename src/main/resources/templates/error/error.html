@@ -4,10 +4,13 @@
 <head><title>Error</title></head>
 <body>
     <div layout:fragment="content">
-        <div class="container" style="text-align: center; padding: 3rem;">
-            <h1>Error</h1>
-            <p th:text="${error != null ? error : 'Ha ocurrido un error inesperado.'}"></p>
-            <a href="/" class="btn btn-primary">Volver al inicio</a>
+        <div class="container" style="max-width: 500px; margin: 0 auto;">
+            <div class="empty-state" style="padding: 4rem 2rem;">
+                <div class="empty-icon">&#9888;</div>
+                <h2 style="margin-bottom: 0.5rem;">Ha ocurrido un error</h2>
+                <p th:text="${error != null ? error : 'Algo salio mal. Por favor intenta de nuevo.'}"></p>
+                <a href="/" class="btn btn-primary mt-3">Volver al inicio</a>
+            </div>
         </div>
     </div>
 </body>

@@ -19,6 +19,8 @@ public class SecurityConfig {
             .logout(logout -> logout.disable())
             .httpBasic(basic -> basic.disable())
             .authorizeHttpRequests(authz -> authz
+                // Allow all requests - session validation is done at controller level via SessionUtil
+                // This is safe because all protected endpoints have verificarSesion() guards
                 .anyRequest().permitAll()
             )
             .csrf(csrf -> csrf.disable());

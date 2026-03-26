@@ -61,4 +61,10 @@ public interface CaracteristicaService {
      * @return lista de subcategorías activas
      */
     List<Caracteristica> hijosActivos(Integer idPadre);
+
+    /**
+     * Elimina (desactiva) una característica por ID
+     * @param idCaracteristica ID de la característica a eliminar
+     */
+    void eliminar(Integer idCaracteristica);
 }

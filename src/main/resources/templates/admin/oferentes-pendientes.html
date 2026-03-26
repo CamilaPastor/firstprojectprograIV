@@ -4,38 +4,48 @@
 <head><title>Admin - Oferentes pendientes</title></head>
 <body>
     <div layout:fragment="content">
-        <div class="container" style="padding: 2rem 0;">
-            <div th:if="${success}" style="background: #f0fdf4; color: #16a34a; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+        <div class="container">
+            <div th:if="${success}" class="alert alert-success">
                 <span th:text="${success}"></span>
             </div>
-            <div th:if="${error}" style="background: #fef2f2; color: #dc2626; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+            <div th:if="${error}" class="alert alert-danger">
                 <span th:text="${error}"></span>
             </div>
 
-            <h1>Oferentes pendientes</h1>
+            <div class="page-header">
+                <h1>&#128101; Oferentes pendientes de aprobacion</h1>
+                <p>Revisa y aprueba las cuentas de oferente registradas</p>
+            </div>
 
-            <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
-                <thead>
-                    <tr style="background: #f3f4f6; text-align: left;">
-                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Usuario</th>
-                        <th style="padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Accion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="oferente : ${oferentes}" style="border-bottom: 1px solid #e5e7eb;">
-                        <td style="padding: 0.75rem;" th:text="${oferente.correo}"></td>
-                        <td style="padding: 0.75rem;">
-                            <form method="post" action="/admin/aprobar-oferente" style="display: inline;">
-                                <input type="hidden" name="idOferente" th:value="${oferente.idOferente}" />
-                                <button type="submit" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.3rem 0.6rem;">Aprobar y generar clave</button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div th:if="${oferentes != null && !oferentes.isEmpty()}" class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Identificacion</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="oferente : ${oferentes}">
+                            <td th:text="${oferente.nombre + ' ' + oferente.apellido}" style="font-weight: 600;"></td>
+                            <td th:text="${oferente.correo}"></td>
+                            <td th:text="${oferente.identificacion}"></td>
+                            <td>
+                                <form method="post" action="/admin/aprobar-oferente" class="inline">
+                                    <input type="hidden" name="idOferente" th:value="${oferente.idOferente}" />
+                                    <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-            <div th:if="${oferentes == null || oferentes.isEmpty()}" style="padding: 2rem; text-align: center;">
-                <p>No hay oferentes pendientes.</p>
+            <div th:if="${oferentes == null || oferentes.isEmpty()}" class="empty-state">
+                <div class="empty-icon">&#9989;</div>
+                <p>No hay oferentes pendientes de aprobacion.</p>
             </div>
         </div>
     </div>

@@ -161,6 +161,7 @@ public class AdminController {
         if (user == null) return "redirect:/login";
 
         try {
+            caracteristicaService.eliminar(idCaracteristica);
             SessionUtil.addSuccessMessage(attributes, "Caracteristica eliminada");
         } catch (Exception e) {
             SessionUtil.addErrorMessage(attributes, "Error: " + e.getMessage());
