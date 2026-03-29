@@ -1,33 +1,25 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org" lang="es">
-<head><title>Oferente - Dashboard</title></head>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Panel de Oferente</title></head>
 <body>
-    <div layout:fragment="content">
-        <div class="container">
-            <div class="page-header">
-                <h1>&#128100; Panel de Oferente</h1>
-                <p>Gestiona tu perfil profesional, habilidades y CV</p>
-            </div>
-
-            <div class="stats-grid">
-                <a href="/oferente/habilidades" class="stat-card" style="text-decoration: none;">
-                    <div class="stat-icon">&#127919;</div>
-                    <div class="stat-label">Mis habilidades</div>
-                    <p class="text-small text-muted mt-1">Registra y administra tus competencias</p>
-                </a>
-                <a href="/oferente/mi-cv" class="stat-card" style="text-decoration: none;">
-                    <div class="stat-icon">&#128196;</div>
-                    <div class="stat-label">Mi CV</div>
-                    <p class="text-small text-muted mt-1">Sube o actualiza tu curriculum</p>
-                </a>
-                <a href="/puestos/buscar-por-caracteristicas" class="stat-card" style="text-decoration: none;">
-                    <div class="stat-icon">&#128269;</div>
-                    <div class="stat-label">Buscar puestos</div>
-                    <p class="text-small text-muted mt-1">Explora oportunidades disponibles</p>
-                </a>
-            </div>
-        </div>
+<div layout:fragment="content">
+    <div class="page-header">
+        <h1>&#128100; Panel de Oferente</h1>
+        <p th:text="${usuario != null ? 'Bienvenido, ' + usuario.nombre : 'Bienvenido'}">Bienvenido</p>
     </div>
+    <div class="dash-actions">
+        <a href="/oferente/habilidades" class="btn btn-primary">Mis habilidades</a>
+        <a href="/oferente/mi-cv" class="btn btn-outline">Mi CV</a>
+        <a href="/puestos/buscar-por-caracteristicas" class="btn btn-outline">Explorar puestos</a>
+    </div>
+    <div class="notice-box" style="margin-top:22px;">
+        <h4>&#128204; Guía rápida</h4>
+        <p>
+            Registre sus habilidades técnicas desde <strong>Mis habilidades</strong> y suba su
+            curriculum vitae desde <strong>Mi CV</strong>. Cuantas más habilidades registre,
+            mayor será su porcentaje de coincidencia con los puestos disponibles.
+        </p>
+    </div>
+</div>
 </body>
 </html>

@@ -38,7 +38,6 @@ public class OferenteServiceImpl implements OferenteService {
             throw new IllegalArgumentException("La identificación ya está registrada");
         }
 
-        // Hashear la contraseña
         if (oferente.getPasswordSinHashear() != null && !oferente.getPasswordSinHashear().isEmpty()) {
             oferente.setPasswordHash(passwordEncoder.encode(oferente.getPasswordSinHashear()));
         }
@@ -158,7 +157,6 @@ public class OferenteServiceImpl implements OferenteService {
         existente.setTelefono(oferente.getTelefono());
         existente.setResidencia(oferente.getResidencia());
 
-        // Si se proporciona nueva contraseña
         if (oferente.getPasswordSinHashear() != null && !oferente.getPasswordSinHashear().isEmpty()) {
             existente.setPasswordHash(passwordEncoder.encode(oferente.getPasswordSinHashear()));
         }

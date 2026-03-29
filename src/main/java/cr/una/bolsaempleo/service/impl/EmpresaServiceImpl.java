@@ -25,7 +25,6 @@ public class EmpresaServiceImpl implements EmpresaService {
             throw new IllegalArgumentException("El correo ya está registrado");
         }
 
-        // Hashear la contraseña
         if (empresa.getPasswordSinHashear() != null && !empresa.getPasswordSinHashear().isEmpty()) {
             empresa.setPasswordHash(passwordEncoder.encode(empresa.getPasswordSinHashear()));
         }
@@ -85,7 +84,6 @@ public class EmpresaServiceImpl implements EmpresaService {
         existente.setTelefono(empresa.getTelefono());
         existente.setDescripcion(empresa.getDescripcion());
 
-        // Si se proporciona nueva contraseña
         if (empresa.getPasswordSinHashear() != null && !empresa.getPasswordSinHashear().isEmpty()) {
             existente.setPasswordHash(passwordEncoder.encode(empresa.getPasswordSinHashear()));
         }

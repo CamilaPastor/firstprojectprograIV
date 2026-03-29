@@ -83,7 +83,6 @@ public class CaracteristicaServiceImpl implements CaracteristicaService {
         Caracteristica caracteristica = caracteristicaRepository.findById(idCaracteristica)
                 .orElseThrow(() -> new IllegalArgumentException("Característica no encontrada"));
 
-        // Soft delete: desactivar en lugar de borrar
         caracteristica.setActivo(false);
         caracteristicaRepository.save(caracteristica);
     }

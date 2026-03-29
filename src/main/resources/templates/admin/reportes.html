@@ -1,47 +1,32 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org" lang="es">
-<head><title>Admin - Reportes</title></head>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Reportes</title></head>
 <body>
-    <div layout:fragment="content">
-        <div class="container" style="max-width: 520px; margin: 0 auto;">
-            <div class="page-header">
-                <h1>&#128202; Reportes</h1>
-                <p>Genera reportes PDF con estadisticas de puestos solicitados por mes</p>
-            </div>
-
-            <div class="card" style="padding: 2rem;">
-                <h3 style="margin-bottom: 1rem;">Generar reporte mensual</h3>
+<div layout:fragment="content">
+    <div class="page-header">
+        <h1>&#128196; Generación de Reportes</h1>
+        <p>Genere un reporte PDF con los puestos registrados en un mes determinado.</p>
+    </div>
+    <div class="reportes-wrap">
+        <div class="card">
+            <div class="card-header">Parámetros del reporte</div>
+            <div class="card-body">
                 <form method="get" action="/admin/generar-reporte">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label class="form-label">Anio</label>
-                            <input type="number" name="anio" class="form-control" required value="2026" min="2020" max="2030" />
-                        </div>
+                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Mes</label>
-                            <select name="mes" class="form-control" required>
-                                <option value="1">Enero</option>
-                                <option value="2">Febrero</option>
-                                <option value="3" selected>Marzo</option>
-                                <option value="4">Abril</option>
-                                <option value="5">Mayo</option>
-                                <option value="6">Junio</option>
-                                <option value="7">Julio</option>
-                                <option value="8">Agosto</option>
-                                <option value="9">Septiembre</option>
-                                <option value="10">Octubre</option>
-                                <option value="11">Noviembre</option>
-                                <option value="12">Diciembre</option>
-                            </select>
+                            <input type="number" name="mes" class="form-control" min="1" max="12" value="1" required/>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Año</label>
+                            <input type="number" name="anio" class="form-control" min="2020" max="2099" value="2026" required/>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block btn-lg mt-2">&#128196; Generar PDF</button>
+                    <button type="submit" class="btn btn-primary">&#128196; Generar PDF</button>
                 </form>
             </div>
-
-            <a href="/admin/dashboard" class="btn btn-secondary mt-2">&#8592; Volver al dashboard</a>
         </div>
     </div>
+</div>
 </body>
 </html>

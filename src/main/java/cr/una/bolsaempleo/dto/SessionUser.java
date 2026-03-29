@@ -18,5 +18,5 @@ public class SessionUser implements Serializable {
 
     private String correo;
 
-    private String tipoUsuario; // "empresa", "oferente", "admin"
+    private String tipoUsuario;
 }

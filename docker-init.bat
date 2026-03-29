@@ -71,7 +71,7 @@ if errorlevel 1 (
 )
 echo + Servicios iniciados
 
-REM Esperar a que los servicios se inicialicen
+REM
 echo.
 echo Esperando a que los servicios se inicialicen...
 timeout /t 10 /nobreak

@@ -41,7 +41,6 @@ public class PuestoServiceImpl implements PuestoService {
 
         Puesto puestoGuardado = puestoRepository.save(puesto);
 
-        // Agregar características requeridas
         if (idsCaracteristicas != null && !idsCaracteristicas.isEmpty()) {
             for (int i = 0; i < idsCaracteristicas.size(); i++) {
                 Integer idCaracteristica = idsCaracteristicas.get(i);

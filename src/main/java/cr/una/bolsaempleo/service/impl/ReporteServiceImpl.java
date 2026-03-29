@@ -42,12 +42,10 @@ public class ReporteServiceImpl implements ReporteService {
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
 
-        // Título
         document.add(new Paragraph("Reporte de Puestos")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setFontSize(20));
 
-        // Mes y año
         String mesAnio = String.format("Mes: %02d/%d", mes, anio);
         document.add(new Paragraph(mesAnio)
                 .setTextAlignment(TextAlignment.CENTER)
@@ -55,7 +53,6 @@ public class ReporteServiceImpl implements ReporteService {
 
         document.add(new Paragraph("\n"));
 
-        // Obtener puestos del mes
         List<Puesto> puestos = puestoRepository.findByTipoPublicacionAndActivoTrue("publico").stream()
                 .filter(p -> {
                     YearMonth yearMonth = YearMonth.from(p.getFechaRegistro());
@@ -63,11 +60,9 @@ public class ReporteServiceImpl implements ReporteService {
                 })
                 .toList();
 
-        // Tabla de puestos
         Table table = new Table(5);
         table.setWidth(com.itextpdf.layout.properties.UnitValue.createPercentValue(100));
 
-        // Encabezados
         String[] headers = {"ID", "Empresa", "Descripción", "Salario", "Tipo"};
         for (String header : headers) {
             Cell cell = new Cell();
@@ -76,7 +71,6 @@ public class ReporteServiceImpl implements ReporteService {
             table.addCell(cell);
         }
 
-        // Datos
         for (Puesto puesto : puestos) {
             table.addCell(new Cell().add(new Paragraph(puesto.getIdPuesto().toString())));
             table.addCell(new Cell().add(new Paragraph(puesto.getEmpresa().getNombre())));
@@ -91,7 +85,6 @@ public class ReporteServiceImpl implements ReporteService {
 
         document.add(table);
 
-        // Estadísticas
         document.add(new Paragraph("\n\nEstadísticas:"));
         document.add(new Paragraph("Total de puestos: " + puestos.size()));
 
@@ -106,11 +99,9 @@ public class ReporteServiceImpl implements ReporteService {
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
 
-        // Obtener puesto
         Puesto puesto = puestoRepository.findById(idPuesto)
                 .orElseThrow(() -> new IllegalArgumentException("Puesto no encontrado"));
 
-        // Título
         document.add(new Paragraph("Reporte de Candidatos")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setFontSize(20));
@@ -120,14 +111,11 @@ public class ReporteServiceImpl implements ReporteService {
 
         document.add(new Paragraph("\n"));
 
-        // Obtener candidatos
         List<ResultadoCandidato> candidatos = busquedaService.buscarCandidatos(idPuesto);
 
-        // Tabla de candidatos
         Table table = new Table(5);
         table.setWidth(com.itextpdf.layout.properties.UnitValue.createPercentValue(100));
 
-        // Encabezados
         String[] headers = {"Nombre", "Email", "Cumplidos", "Total", "Porcentaje"};
         for (String header : headers) {
             Cell cell = new Cell();
@@ -136,7 +124,6 @@ public class ReporteServiceImpl implements ReporteService {
             table.addCell(cell);
         }
 
-        // Datos
         for (ResultadoCandidato rc : candidatos) {
             Oferente o = rc.getOferente();
             table.addCell(new Cell().add(new Paragraph(o.getNombre() + " " + o.getApellido())));
@@ -159,7 +146,6 @@ public class ReporteServiceImpl implements ReporteService {
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
 
-        // Título
         document.add(new Paragraph("Reporte de Oferentes Aprobados")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setFontSize(20));
@@ -169,14 +155,11 @@ public class ReporteServiceImpl implements ReporteService {
 
         document.add(new Paragraph("\n"));
 
-        // Obtener oferentes aprobados
         List<Oferente> oferentes = oferenteRepository.findAprobadosConCv();
 
-        // Tabla de oferentes
         Table table = new Table(5);
         table.setWidth(com.itextpdf.layout.properties.UnitValue.createPercentValue(100));
 
-        // Encabezados
         String[] headers = {"Nombre", "Email", "Nacionalidad", "Residencia", "CV"};
         for (String header : headers) {
             Cell cell = new Cell();
@@ -185,7 +168,6 @@ public class ReporteServiceImpl implements ReporteService {
             table.addCell(cell);
         }
 
-        // Datos
         for (Oferente o : oferentes) {
             table.addCell(new Cell().add(new Paragraph(o.getNombre() + " " + o.getApellido())));
             table.addCell(new Cell().add(new Paragraph(o.getCorreo())));
@@ -196,7 +178,6 @@ public class ReporteServiceImpl implements ReporteService {
 
         document.add(table);
 
-        // Estadísticas
         document.add(new Paragraph("\n\nEstadísticas:"));
         document.add(new Paragraph("Total de oferentes: " + oferentes.size()));
 

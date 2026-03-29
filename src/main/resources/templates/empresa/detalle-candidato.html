@@ -1,71 +1,49 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org" lang="es">
-<head><title>Detalle de candidato</title></head>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Detalle Candidato</title></head>
 <body>
-    <div layout:fragment="content">
-        <div class="container" style="max-width: 800px; margin: 0 auto;">
-            <div class="page-header">
-                <h1>&#128100; Detalle del oferente</h1>
-            </div>
-
-            <!-- Profile card -->
-            <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
-                <h2 th:text="${oferente.nombre + ' ' + oferente.apellido}" style="margin-bottom: 1rem;"></h2>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-                    <div>
-                        <span class="text-small text-muted">Identificacion</span>
-                        <p style="color: var(--gray-800); font-weight: 500;" th:text="${oferente.identificacion}"></p>
-                    </div>
-                    <div>
-                        <span class="text-small text-muted">Email</span>
-                        <p style="color: var(--gray-800); font-weight: 500;" th:text="${oferente.correo}"></p>
-                    </div>
-                    <div>
-                        <span class="text-small text-muted">Telefono</span>
-                        <p style="color: var(--gray-800); font-weight: 500;" th:text="${oferente.telefono != null ? oferente.telefono : 'No especificado'}"></p>
-                    </div>
-                    <div>
-                        <span class="text-small text-muted">Residencia</span>
-                        <p style="color: var(--gray-800); font-weight: 500;" th:text="${oferente.residencia != null ? oferente.residencia : 'No especificada'}"></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Skills -->
-            <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
-                <h3 style="margin-bottom: 1rem;">&#127919; Habilidades</h3>
-                <div th:if="${habilidades != null && !habilidades.isEmpty()}" class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Caracteristica</th>
-                                <th>Nivel</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="oc : ${habilidades}">
-                                <td th:text="${oc.caracteristica.nombre}" style="font-weight: 500;"></td>
-                                <td>
-                                    <div class="level-bar">
-                                        <th:block th:each="i : ${#numbers.sequence(1,5)}">
-                                            <div th:class="${i <= oc.nivel ? 'level-dot filled' : 'level-dot'}"></div>
-                                        </th:block>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p th:if="${habilidades == null || habilidades.isEmpty()}" class="text-muted">Este oferente no tiene habilidades registradas.</p>
-            </div>
-
-            <!-- CV Download -->
-            <div class="actions-row">
-                <a th:if="${tieneCv}" th:href="@{'/empresa/descargar-cv/' + ${oferente.idOferente}}" class="btn btn-success">&#128196; Descargar CV</a>
-                <a href="/empresa/mis-puestos" class="btn btn-secondary">&#8592; Volver</a>
-            </div>
-        </div>
+<div layout:fragment="content">
+    <div class="page-header">
+        <h1>&#128100; Perfil del candidato</h1>
+        <p th:text="${oferente.nombre + ' ' + oferente.apellido}"></p>
     </div>
+
+    <div class="detalle-box">
+        <h2>Información personal</h2>
+        <div class="detalle-row"><strong>Identificación:</strong> <span th:text="${oferente.identificacion}"></span></div>
+        <div class="detalle-row"><strong>Correo:</strong> <span th:text="${oferente.correo}"></span></div>
+        <div class="detalle-row"><strong>Teléfono:</strong> <span th:text="${oferente.telefono != null ? oferente.telefono : '—'}"></span></div>
+        <div class="detalle-row"><strong>Residencia:</strong> <span th:text="${oferente.residencia != null ? oferente.residencia : '—'}"></span></div>
+        <div class="detalle-row"><strong>Nacionalidad:</strong> <span th:text="${oferente.nacionalidad != null ? oferente.nacionalidad : '—'}"></span></div>
+    </div>
+
+    <h3 class="habilidades-title">Habilidades registradas</h3>
+    <div class="table-wrap" th:if="${habilidades != null and not #lists.isEmpty(habilidades)}" style="margin-top:10px;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Habilidad / Característica</th>
+                    <th>Nivel (1–5)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="hab : ${habilidades}">
+                    <td th:text="${hab.caracteristica.nombre}"></td>
+                    <td th:text="${hab.nivel}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p th:if="${habilidades == null or #lists.isEmpty(habilidades)}"
+       style="font-size:13px;color:#6c757d;padding:14px;background:#fff;border:1px solid #c8d0da;border-radius:4px;margin-top:10px;">
+        Este candidato no tiene habilidades registradas.
+    </p>
+
+    <div style="margin-top:20px;display:flex;gap:10px;">
+        <a th:if="${tieneCv}" th:href="@{'/empresa/descargar-cv/' + ${oferente.idOferente}}"
+           class="btn btn-success">&#128196; Descargar CV</a>
+        <a href="/empresa/mis-puestos" class="btn btn-secondary">&#8592; Volver</a>
+    </div>
+</div>
 </body>
 </html>

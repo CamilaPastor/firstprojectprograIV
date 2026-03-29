@@ -1,53 +1,60 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org" lang="es">
-<head><title>Buscar puestos</title></head>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Buscar Puestos</title></head>
 <body>
-    <div layout:fragment="content">
-        <div class="container">
-            <div class="page-header">
-                <h1>&#128269; Buscar puestos por caracteristicas</h1>
-                <p>Selecciona las habilidades que buscas y encuentra puestos compatibles</p>
-            </div>
-
-            <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
-                <form method="get" action="/puestos/buscar-por-caracteristicas">
-                    <div th:each="categoria : ${categorias}" style="margin-bottom: 1.25rem;">
-                        <h4 th:text="${categoria.nombre}" style="margin-bottom: 0.5rem; color: var(--gray-700);"></h4>
-                        <div th:if="${categoria.hijos != null && !categoria.hijos.isEmpty()}" style="padding-left: 1rem; display: flex; flex-wrap: wrap; gap: 0.75rem;">
-                            <label th:each="sub : ${categoria.hijos}" class="checkbox-item" style="cursor: pointer;">
-                                <input type="checkbox" name="ids" th:value="${sub.idCaracteristica}" />
-                                <span th:text="${sub.nombre}"></span>
-                            </label>
+<div layout:fragment="content">
+    <div class="buscar-section">
+        <h1>&#128269; Buscar Puestos</h1>
+        <p>Seleccione una o varias características para filtrar los puestos disponibles.</p>
+        <form method="get" action="/puestos/buscar-por-caracteristicas">
+            <div class="form-group">
+                <label class="form-label">Selecciona las características requeridas:</label>
+                <div class="car-checkbox-list">
+                    <th:block th:each="cat : ${categorias}">
+                        <div class="car-item" th:if="${cat.hijos == null or #lists.isEmpty(cat.hijos)}">
+                            <input type="checkbox" th:id="'car_' + ${cat.idCaracteristica}" name="ids" th:value="${cat.idCaracteristica}" th:checked="${idsSeleccionados != null and #lists.contains(idsSeleccionados, cat.idCaracteristica)}"/>
+                            <label th:for="'car_' + ${cat.idCaracteristica}" th:text="${cat.nombre}"></label>
                         </div>
-                    </div>
-
-                    <div class="actions-row mt-2">
-                        <button type="submit" class="btn btn-primary">Buscar</button>
-                        <a href="/puestos/buscar-por-caracteristicas" class="btn btn-secondary">Limpiar filtros</a>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Results -->
-            <div th:if="${puestos != null}">
-                <h3 class="mb-2">Resultados</h3>
-                <div th:if="${puestos.isEmpty()}" class="empty-state">
-                    <div class="empty-icon">&#128269;</div>
-                    <p>No se encontraron puestos que coincidan con los filtros seleccionados.</p>
-                </div>
-                <div th:if="${!puestos.isEmpty()}" class="features-grid">
-                    <div th:each="puesto : ${puestos}" class="card">
-                        <span class="badge badge-primary mb-1" th:text="${puesto.empresa.nombre}">Empresa</span>
-                        <h4 th:text="${puesto.descripcion}" style="margin-bottom: 0.5rem;">Puesto</h4>
-                        <p th:if="${puesto.salario != null}" style="color: #16a34a; font-weight: 600;">
-                            &#8353; <span th:text="${#numbers.formatDecimal(puesto.salario, 0, 'COMMA', 2, 'POINT')}"></span>
-                        </p>
-                        <p th:if="${puesto.salario == null}" class="text-muted text-small">Salario no especificado</p>
-                    </div>
+                        <th:block th:if="${cat.hijos != null and not #lists.isEmpty(cat.hijos)}">
+                            <div class="car-item">
+                                <strong th:text="${cat.nombre}"></strong>
+                            </div>
+                            <th:block th:each="sub : ${cat.hijos}">
+                                <div class="car-item sub" th:if="${sub.hijos == null or #lists.isEmpty(sub.hijos)}">
+                                    <input type="checkbox" th:id="'car_' + ${sub.idCaracteristica}" name="ids" th:value="${sub.idCaracteristica}" th:checked="${idsSeleccionados != null and #lists.contains(idsSeleccionados, sub.idCaracteristica)}"/>
+                                    <label th:for="'car_' + ${sub.idCaracteristica}" th:text="${sub.nombre}"></label>
+                                </div>
+                                <th:block th:if="${sub.hijos != null and not #lists.isEmpty(sub.hijos)}">
+                                    <div class="car-item sub">
+                                        <strong th:text="${sub.nombre}"></strong>
+                                    </div>
+                                    <div class="car-item subsub" th:each="subsub : ${sub.hijos}">
+                                        <input type="checkbox" th:id="'car_' + ${subsub.idCaracteristica}" name="ids" th:value="${subsub.idCaracteristica}" th:checked="${idsSeleccionados != null and #lists.contains(idsSeleccionados, subsub.idCaracteristica)}"/>
+                                        <label th:for="'car_' + ${subsub.idCaracteristica}" th:text="${subsub.nombre}"></label>
+                                    </div>
+                                </th:block>
+                            </th:block>
+                        </th:block>
+                    </th:block>
                 </div>
             </div>
+            <div class="buscar-btns">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+                <a href="/puestos/buscar-por-caracteristicas" class="btn btn-secondary">Limpiar</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="resultados-section" th:if="${puestos != null and not #lists.isEmpty(puestos)}">
+        <h2>Resultados de búsqueda</h2>
+        <div th:each="puesto : ${puestos}" class="resultado-item">
+            <div class="emp-r" th:text="${puesto.empresa.nombre}">Empresa</div>
+            <div class="desc-r" th:text="${puesto.descripcion}">Descripción</div>
+            <div class="sal-r" th:if="${puesto.salario != null}" th:text="'Salario: ₡ ' + ${#numbers.formatDecimal(puesto.salario,1,'COMMA',2,'POINT')}"></div>
+            <div class="sal-r" th:unless="${puesto.salario != null}">Salario a convenir</div>
         </div>
     </div>
+    <p th:if="${idsSeleccionados != null and (puestos == null or #lists.isEmpty(puestos))}" style="color:#6c757d;font-size:13px;margin-top:16px;">No se encontraron puestos con esas características.</p>
+</div>
 </body>
 </html>

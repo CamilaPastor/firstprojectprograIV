@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 
@@ -29,67 +28,54 @@ public class LoginController {
         return "public/login";
     }
 
+    
     @PostMapping("/login")
-    public String login(@RequestParam String tipo,
-                       @RequestParam String usuario,
-                       @RequestParam String password,
-                       HttpSession session,
-                       Model model,
-                       RedirectAttributes attributes) {
+    public String login(@RequestParam String usuario,
+                        @RequestParam String password,
+                        HttpSession session,
+                        Model model) {
         try {
-            SessionUser sessionUser = null;
 
-            if ("empresa".equals(tipo)) {
-                Optional<Empresa> empresa = empresaService.loginPorCorreo(usuario, password);
-                if (empresa.isPresent() && empresa.get().getAprobado()) {
-                    Empresa e = empresa.get();
-                    sessionUser = new SessionUser(e.getIdEmpresa(), e.getNombre(), e.getCorreo(), "empresa");
-                } else if (empresa.isPresent() && !empresa.get().getAprobado()) {
-                    model.addAttribute("error", "Tu cuenta de empresa aun no ha sido aprobada por el administrador");
-                    return "public/login";
-                } else {
-                    model.addAttribute("error", "Correo o contraseña incorrectos");
-                    return "public/login";
-                }
-            } else if ("oferente".equals(tipo)) {
-                Optional<Oferente> oferente = oferenteService.loginPorCorreo(usuario, password);
-                if (oferente.isPresent() && oferente.get().getAprobado()) {
-                    Oferente o = oferente.get();
-                    sessionUser = new SessionUser(o.getIdOferente(), o.getNombre() + " " + o.getApellido(), o.getCorreo(), "oferente");
-                } else if (oferente.isPresent() && !oferente.get().getAprobado()) {
-                    model.addAttribute("error", "Tu cuenta de oferente aun no ha sido aprobada por el administrador");
-                    return "public/login";
-                } else {
-                    model.addAttribute("error", "Correo o contraseña incorrectos");
-                    return "public/login";
-                }
-            } else if ("admin".equals(tipo)) {
-                Optional<Administrador> admin = adminService.login(usuario, password);
-                if (admin.isPresent()) {
-                    Administrador a = admin.get();
-                    sessionUser = new SessionUser(a.getIdAdmin(), "Admin", a.getIdentificacion(), "admin");
-                } else {
-                    model.addAttribute("error", "Identificacion o contraseña incorrectos");
-                    return "public/login";
-                }
-            } else {
-                model.addAttribute("error", "Tipo de usuario invalido");
-                return "public/login";
-            }
-
-            if (sessionUser != null) {
+            Optional<Administrador> admin = adminService.login(usuario, password);
+            if (admin.isPresent()) {
+                Administrador a = admin.get();
+                SessionUser sessionUser = new SessionUser(a.getIdAdmin(), "Admin", a.getIdentificacion(), "admin");
                 SessionUtil.setSessionUser(session, sessionUser);
-                return switch (sessionUser.getTipoUsuario()) {
-                    case "empresa" -> "redirect:/empresa/dashboard";
-                    case "oferente" -> "redirect:/oferente/dashboard";
-                    case "admin" -> "redirect:/admin/dashboard";
-                    default -> "redirect:/";
-                };
+                return "redirect:/admin/dashboard";
             }
+
+            Optional<Empresa> empresa = empresaService.loginPorCorreo(usuario, password);
+            if (empresa.isPresent()) {
+                Empresa e = empresa.get();
+                if (!e.getAprobado()) {
+                    model.addAttribute("error", "Tu cuenta de empresa aun no ha sido aprobada por el administrador.");
+                    return "public/login";
+                }
+                SessionUser sessionUser = new SessionUser(e.getIdEmpresa(), e.getNombre(), e.getCorreo(), "empresa");
+                SessionUtil.setSessionUser(session, sessionUser);
+                return "redirect:/empresa/dashboard";
+            }
+
+            Optional<Oferente> oferente = oferenteService.loginPorCorreo(usuario, password);
+            if (oferente.isPresent()) {
+                Oferente o = oferente.get();
+                if (!o.getAprobado()) {
+                    model.addAttribute("error", "Tu cuenta de oferente aun no ha sido aprobada por el administrador.");
+                    return "public/login";
+                }
+                SessionUser sessionUser = new SessionUser(o.getIdOferente(),
+                        o.getNombre() + " " + o.getApellido(), o.getCorreo(), "oferente");
+                SessionUtil.setSessionUser(session, sessionUser);
+                return "redirect:/oferente/dashboard";
+            }
+
+            model.addAttribute("error", "Usuario o contraseña incorrectos.");
+            return "public/login";
+
         } catch (Exception e) {
             model.addAttribute("error", "Error al iniciar sesion: " + e.getMessage());
+            return "public/login";
         }
-        return "public/login";
     }
 
     @GetMapping("/logout")

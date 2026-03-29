@@ -96,7 +96,6 @@ public class EmpresaController {
             List<Integer> idsCaracteristicas = caracteristicas != null ? caracteristicas : List.of();
             List<Integer> nivelesRequeridos = new ArrayList<>();
 
-            // Para cada caracteristica seleccionada, obtener su nivel individual
             for (Integer idCar : idsCaracteristicas) {
                 String nivelStr = request.getParameter("nivel_" + idCar);
                 nivelesRequeridos.add(nivelStr != null ? Integer.parseInt(nivelStr) : 3);

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org" lang="es">
-<head><title>Error</title></head>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
-    <div layout:fragment="content">
-        <div class="container" style="max-width: 500px; margin: 0 auto;">
-            <div class="empty-state" style="padding: 4rem 2rem;">
-                <div class="empty-icon">&#9888;</div>
-                <h2 style="margin-bottom: 0.5rem;">Ha ocurrido un error</h2>
-                <p th:text="${error != null ? error : 'Algo salio mal. Por favor intenta de nuevo.'}"></p>
-                <a href="/" class="btn btn-primary mt-3">Volver al inicio</a>
-            </div>
-        </div>
-    </div>
+<div class="error-page">
+    <div class="error-code" th:text="${status != null ? status : 'Error'}"></div>
+    <div class="error-msg" th:text="${error != null ? error : 'Algo salió mal'}"></div>
+    <div class="error-sub">Por favor, intenta de nuevo más tarde.</div>
+    <a href="/" class="btn btn-primary" style="margin-top:20px;">Volver al inicio</a>
+</div>
 </body>
 </html>

@@ -61,7 +61,6 @@ public class OferenteController {
         List<OferenteCaracteristica> habilidades = (List<OferenteCaracteristica>) oferenteService.habilidades(user.getId());
         List<Caracteristica> raices = caracteristicaService.raices();
 
-        // Para navegacion de ruta
         List<Caracteristica> subcategorias = null;
         Caracteristica categoriaActual = null;
 
@@ -73,12 +72,14 @@ public class OferenteController {
             }
         }
 
+        List<Caracteristica> visibles = (subcategorias != null) ? subcategorias : raices;
+
         model.addAttribute("usuario", user);
         model.addAttribute("habilidades", habilidades);
-        model.addAttribute("raices", raices);
-        model.addAttribute("subcategorias", subcategorias);
+        model.addAttribute("categorias", visibles);
         model.addAttribute("categoriaActual", categoriaActual);
         model.addAttribute("actualId", actualId);
+        model.addAttribute("todas", caracteristicaService.todas());
         return "oferente/habilidades";
     }
 

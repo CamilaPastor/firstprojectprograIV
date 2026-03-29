@@ -18,9 +18,7 @@ public class ResultadoCandidato {
     
     private Double porcentaje;
 
-    /**
-     * Constructor con cálculo automático de porcentaje
-     */
+    
     public ResultadoCandidato(Oferente oferente, Integer cumplidos, Integer total) {
         this.oferente = oferente;
         this.cumplidos = cumplidos;

@@ -124,11 +124,13 @@ public class AdminController {
             }
         }
 
+        List<Caracteristica> visibles = (subcategorias != null) ? subcategorias : raices;
+
         model.addAttribute("usuario", user);
-        model.addAttribute("raices", raices);
-        model.addAttribute("subcategorias", subcategorias);
+        model.addAttribute("categorias", visibles);
         model.addAttribute("categoriaActual", categoriaActual);
         model.addAttribute("actualId", actualId);
+        model.addAttribute("todas", caracteristicaService.todas());
         return "admin/caracteristicas";
     }
 

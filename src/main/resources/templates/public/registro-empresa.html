@@ -1,54 +1,46 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org" lang="es">
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" lang="es">
 <head><title>Registro Empresa</title></head>
 <body>
-    <div layout:fragment="content">
-        <div class="auth-wrapper" style="max-width: 540px;">
-            <div th:if="${error}" class="alert alert-danger">
-                <span th:text="${error}"></span>
-            </div>
-
-            <div class="auth-card">
-                <div class="auth-header">
-                    <div class="auth-icon">&#127970;</div>
-                    <h2>Registro de Empresa</h2>
-                    <p>Crea una cuenta para publicar puestos y buscar candidatos</p>
+<div layout:fragment="content">
+    <div class="registro-card">
+        <div class="registro-header">&#127970; Registro de Empresa</div>
+        <div class="registro-body">
+            <form method="post" action="/registro/empresa">
+                <div class="form-group">
+                    <label class="form-label">Nombre de la Empresa</label>
+                    <input type="text" name="nombre" class="form-control" required placeholder="Nombre completo de la empresa"/>
                 </div>
-
-                <form method="post" action="/registro/empresa">
-                    <div class="form-group">
-                        <label class="form-label">Nombre de la Empresa *</label>
-                        <input type="text" name="nombre" class="form-control" required placeholder="Nombre completo de la empresa" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Localizacion</label>
-                        <input type="text" name="localizacion" class="form-control" placeholder="Ciudad, Provincia" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Correo Electronico *</label>
-                        <input type="email" name="correo" class="form-control" required placeholder="contacto@empresa.com" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Telefono</label>
-                        <input type="tel" name="telefono" class="form-control" placeholder="+506 2222-3333" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Descripcion</label>
-                        <textarea name="descripcion" class="form-control" rows="3" placeholder="Breve descripcion de tu empresa"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Contrasena *</label>
-                        <input type="password" name="password" class="form-control" required placeholder="Minimo 6 caracteres" />
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block btn-lg">Registrar Empresa</button>
-                </form>
-
-                <div class="auth-footer">
-                    Ya tienes cuenta? <a href="/login">Inicia sesion</a>
+                <div class="form-group">
+                    <label class="form-label">Localización</label>
+                    <input type="text" name="localizacion" class="form-control" placeholder="Ciudad, Provincia"/>
                 </div>
-            </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Correo Electrónico</label>
+                        <input type="email" name="correo" class="form-control" required placeholder="contacto@empresa.com"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Teléfono</label>
+                        <input type="tel" name="telefono" class="form-control" placeholder="+506 2222-3333"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descripción de la empresa</label>
+                    <textarea name="descripcion" class="form-control" rows="3" placeholder="Breve descripción de la empresa y su actividad"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" name="password" class="form-control" required placeholder="Mínimo 6 caracteres"/>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Solicitar registro</button>
+            </form>
+        </div>
+        <div class="registro-footer">
+            Su solicitud quedará pendiente de aprobación por el administrador. &nbsp;
+            ¿Ya tiene cuenta? <a href="/login">Inicie sesión aquí</a>
         </div>
     </div>
+</div>
 </body>
 </html>

@@ -8,74 +8,90 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-inner">
-            <a href="/" class="nav-brand">&#128188; Bolsa de Empleo</a>
-            <div class="nav-links">
-                <!-- Public links -->
-                <a href="/puestos/buscar-por-caracteristicas">Buscar puestos</a>
 
-                <!-- No session -->
-                <th:block th:if="${session.usuario == null}">
-                    <a href="/registro/empresa">Registro Empresa</a>
-                    <a href="/registro/oferente">Registro Oferente</a>
-                    <a href="/login" class="nav-btn">Iniciar sesion</a>
-                </th:block>
+<div class="topbar">
+    <span>EIF209 Programación IV &mdash; Universidad Nacional de Costa Rica</span>
+    <th:block th:if="${session.usuario != null}">
+        <span>Bienvenido, <strong th:text="${session.usuario.nombre}"></strong></span>
+        <a href="/logout">Cerrar sesión</a>
+    </th:block>
+    <th:block th:if="${session.usuario == null}">
+        <a href="/login">Iniciar sesión</a>
+        <a href="/registro/empresa">Registro Empresa</a>
+        <a href="/registro/oferente">Registro Oferente</a>
+    </th:block>
+</div>
 
-                <!-- Empresa -->
-                <th:block th:if="${session.usuario != null and session.usuario.tipoUsuario == 'empresa'}">
-                    <a href="/empresa/dashboard">Dashboard</a>
-                    <a href="/empresa/mis-puestos">Mis puestos</a>
-                    <a href="/empresa/nuevo-puesto">Publicar puesto</a>
-                </th:block>
-
-                <!-- Oferente -->
-                <th:block th:if="${session.usuario != null and session.usuario.tipoUsuario == 'oferente'}">
-                    <a href="/oferente/dashboard">Dashboard</a>
-                    <a href="/oferente/habilidades">Mis habilidades</a>
-                    <a href="/oferente/mi-cv">Mi CV</a>
-                </th:block>
-
-                <!-- Admin -->
-                <th:block th:if="${session.usuario != null and session.usuario.tipoUsuario == 'admin'}">
-                    <a href="/admin/dashboard">Dashboard</a>
-                    <a href="/admin/empresas-pendientes">Empresas</a>
-                    <a href="/admin/oferentes-pendientes">Oferentes</a>
-                    <a href="/admin/caracteristicas">Caracteristicas</a>
-                    <a href="/admin/reportes">Reportes</a>
-                </th:block>
-
-                <!-- Logged in user info -->
-                <th:block th:if="${session.usuario != null}">
-                    <span class="nav-user-name" th:text="${session.usuario.nombre}"></span>
-                    <a href="/logout" class="nav-btn nav-btn-outline">Salir</a>
-                </th:block>
-            </div>
+<header class="site-header">
+    <a href="/" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+        <div class="logo-circle">&#128188;</div>
+        <div class="brand-text">
+            <h1>Bolsa de Empleo</h1>
+            <p>Sistema de Gestión de Empleo &mdash; Total Soft Inc.</p>
         </div>
-    </nav>
+    </a>
+</header>
 
-    <!-- Flash messages -->
-    <div class="container" th:if="${success != null or error != null}" style="padding-bottom: 0;">
-        <div th:if="${success != null}" class="alert alert-success" th:text="${success}"></div>
-        <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+<nav class="navbar">
+    <div class="nav-links">
+        <a href="/">Inicio</a>
+        <a href="/puestos/buscar-por-caracteristicas">Buscar puestos</a>
+
+        
+        <th:block th:if="${session.usuario != null and session.usuario.tipoUsuario == 'empresa'}">
+            <a href="/empresa/dashboard">Mi panel</a>
+            <a href="/empresa/mis-puestos">Mis puestos</a>
+            <a href="/empresa/nuevo-puesto">Publicar puesto</a>
+        </th:block>
+
+        
+        <th:block th:if="${session.usuario != null and session.usuario.tipoUsuario == 'oferente'}">
+            <a href="/oferente/dashboard">Mi panel</a>
+            <a href="/oferente/habilidades">Mis habilidades</a>
+            <a href="/oferente/mi-cv">Mi CV</a>
+        </th:block>
+
+        
+        <th:block th:if="${session.usuario != null and session.usuario.tipoUsuario == 'admin'}">
+            <a href="/admin/dashboard">Panel Admin</a>
+            <a href="/admin/empresas-pendientes">Empresas pendientes</a>
+            <a href="/admin/oferentes-pendientes">Oferentes pendientes</a>
+            <a href="/admin/caracteristicas">Características</a>
+            <a href="/admin/reportes">Reportes</a>
+        </th:block>
     </div>
 
-    <!-- Content -->
-    <main>
-        <div layout:fragment="content"></div>
-    </main>
+    <div class="nav-right">
+        <th:block th:if="${session.usuario != null}">
+            <span class="nav-user" th:text="${session.usuario.tipoUsuario}"></span>
+            <a href="/logout" class="badge-salir">Salir</a>
+        </th:block>
+        <th:block th:if="${session.usuario == null}">
+            <a href="/login" class="nav-login">&#128274; Iniciar sesión</a>
+        </th:block>
+    </div>
+</nav>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-inner">
-            <div>
-                <strong>Bolsa de Empleo</strong> &mdash; Total Soft Inc. &middot; EIF209
-            </div>
-            <div>
-                Universidad Nacional de Costa Rica &middot; Programacion IV
-            </div>
-        </div>
-    </footer>
+<div th:if="${success != null or error != null}" style="padding: 10px 20px 0; max-width:980px; margin:0 auto;">
+    <div th:if="${success != null}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error != null}"   class="alert alert-danger"  th:text="${error}"></div>
+</div>
+
+<main>
+    <div class="container">
+        <div layout:fragment="content"></div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div>
+        <strong style="color:rgba(255,255,255,0.85);">Bolsa de Empleo</strong>
+        &mdash; EIF209 Programación IV &mdash; Universidad Nacional de Costa Rica
+    </div>
+    <div>
+        &copy; 2025 Total Soft Inc. &middot; info@bolsaempleo.local
+    </div>
+</footer>
+
 </body>
 </html>

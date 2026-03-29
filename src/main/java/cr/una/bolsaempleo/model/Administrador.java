@@ -28,8 +28,6 @@ public class Administrador {
     @Column(name = "identificacion", nullable = false, unique = true, length = 50)
     private String identificacion;
 
-    @NotBlank(message = "La contraseña es requerida")
-    @Size(min = 20, message = "El hash debe tener al menos 20 caracteres")
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 

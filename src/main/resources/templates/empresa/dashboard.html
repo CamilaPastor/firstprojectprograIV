@@ -1,33 +1,24 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org" lang="es">
-<head><title>Empresa - Dashboard</title></head>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Panel de Empresa</title></head>
 <body>
-    <div layout:fragment="content">
-        <div class="container">
-            <div class="page-header">
-                <h1>&#127970; Panel de Empresa</h1>
-                <p>Administra tus puestos y busca los mejores candidatos</p>
-            </div>
-
-            <div class="stats-grid">
-                <a href="/empresa/mis-puestos" class="stat-card" style="text-decoration: none;">
-                    <div class="stat-icon">&#128203;</div>
-                    <div class="stat-label">Mis puestos</div>
-                    <p class="text-small text-muted mt-1">Ver todos los puestos publicados</p>
-                </a>
-                <a href="/empresa/nuevo-puesto" class="stat-card" style="text-decoration: none;">
-                    <div class="stat-icon">&#10133;</div>
-                    <div class="stat-label">Publicar puesto</div>
-                    <p class="text-small text-muted mt-1">Crear una nueva vacante</p>
-                </a>
-                <a href="/puestos/buscar-por-caracteristicas" class="stat-card" style="text-decoration: none;">
-                    <div class="stat-icon">&#128269;</div>
-                    <div class="stat-label">Buscar puestos</div>
-                    <p class="text-small text-muted mt-1">Explorar puestos del mercado</p>
-                </a>
-            </div>
-        </div>
+<div layout:fragment="content">
+    <div class="page-header">
+        <h1>&#127970; Panel de Empresa</h1>
+        <p th:text="${usuario != null ? 'Bienvenido, ' + usuario.nombre : 'Bienvenido'}">Bienvenido</p>
     </div>
+    <div class="dash-actions">
+        <a href="/empresa/mis-puestos" class="btn btn-primary">Mis puestos publicados</a>
+        <a href="/empresa/nuevo-puesto" class="btn btn-success">&#43; Publicar nuevo puesto</a>
+    </div>
+    <div class="notice-box" style="margin-top:22px;">
+        <h4>&#128204; Guía rápida</h4>
+        <p>
+            Desde <strong>Mis puestos</strong> puede ver los puestos que ha publicado y consultar
+            candidatos ordenados por porcentaje de coincidencia. Use <strong>Publicar nuevo puesto</strong>
+            para crear nuevas vacantes y especificar las habilidades requeridas.
+        </p>
+    </div>
+</div>
 </body>
 </html>

@@ -1,8 +1,5 @@
 services:
 
-  # ==============================
-  # SERVICIO: PostgreSQL 16
-  # ==============================
   postgres:
     image: postgres:16-alpine
     container_name: bolsa_empleo_postgres
@@ -26,9 +23,6 @@ services:
     networks:
       - bolsa_network
 
-  # ==========================
-  # SERVICIO: Aplicación Spring
-  # ==========================
   app:
     build:
       context: .
@@ -47,6 +41,7 @@ services:
       SPRING_JPA_SHOW_SQL: "false"
       SPRING_APPLICATION_NAME: bolsa-empleo
       SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: "8080"
       JAVA_OPTS: "-Xmx512m -Xms256m"
       TZ: America/Costa_Rica
     depends_on:

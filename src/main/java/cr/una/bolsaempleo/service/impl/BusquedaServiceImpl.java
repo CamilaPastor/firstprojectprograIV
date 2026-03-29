@@ -33,7 +33,6 @@ public class BusquedaServiceImpl implements BusquedaService {
         Puesto puesto = puestoRepository.findById(idPuesto)
                 .orElseThrow(() -> new IllegalArgumentException("Puesto no encontrado"));
 
-        // Obtener características requeridas del puesto
         List<PuestoCaracteristica> requeridas = puestoCaracteristicaRepository
                 .findByPuesto_IdPuesto(idPuesto);
 
@@ -41,16 +40,13 @@ public class BusquedaServiceImpl implements BusquedaService {
             return Collections.emptyList();
         }
 
-        // Obtener oferentes aprobados y activos
         List<Oferente> oferentes = oferenteRepository.findAllActivos();
 
-        // Calcular coincidencias para cada oferente
         List<ResultadoCandidato> resultados = new ArrayList<>();
 
         for (Oferente oferente : oferentes) {
             int cumplidos = 0;
 
-            // Verificar cada característica requerida
             for (PuestoCaracteristica pc : requeridas) {
                 OferenteCaracteristica oc = oferenteCaracteristicaRepository
                         .findByOferenteAndCaracteristica(
@@ -58,13 +54,11 @@ public class BusquedaServiceImpl implements BusquedaService {
                                 pc.getCaracteristica().getIdCaracteristica()
                         );
 
-                // Si el oferente tiene la característica con nivel >= requerido
                 if (oc != null && oc.getNivel() >= pc.getNivelRequerido()) {
                     cumplidos++;
                 }
             }
 
-            // Crear resultado con porcentaje calculado
             ResultadoCandidato resultado = new ResultadoCandidato(
                     oferente,
                     cumplidos,
@@ -74,7 +68,6 @@ public class BusquedaServiceImpl implements BusquedaService {
             resultados.add(resultado);
         }
 
-        // Ordenar por porcentaje descendente
         return resultados.stream()
                 .sorted((a, b) -> b.getPorcentaje().compareTo(a.getPorcentaje()))
                 .collect(Collectors.toList());
@@ -88,7 +81,6 @@ public class BusquedaServiceImpl implements BusquedaService {
 
         Set<Puesto> puestos = new HashSet<>();
 
-        // Para cada característica, obtener puestos que la requieren
         for (Integer idCaracteristica : idsCaracteristicas) {
             List<PuestoCaracteristica> puestosCaracteristica = puestoCaracteristicaRepository
                     .findByCaracteristica_IdCaracteristica(idCaracteristica);

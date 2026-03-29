@@ -1,53 +1,45 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org" lang="es">
-<head><title>Admin - Oferentes pendientes</title></head>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><title>Oferentes Pendientes</title></head>
 <body>
-    <div layout:fragment="content">
-        <div class="container">
-            <div th:if="${success}" class="alert alert-success">
-                <span th:text="${success}"></span>
-            </div>
-            <div th:if="${error}" class="alert alert-danger">
-                <span th:text="${error}"></span>
-            </div>
-
-            <div class="page-header">
-                <h1>&#128101; Oferentes pendientes de aprobacion</h1>
-                <p>Revisa y aprueba las cuentas de oferente registradas</p>
-            </div>
-
-            <div th:if="${oferentes != null && !oferentes.isEmpty()}" class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Correo</th>
-                            <th>Identificacion</th>
-                            <th>Accion</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="oferente : ${oferentes}">
-                            <td th:text="${oferente.nombre + ' ' + oferente.apellido}" style="font-weight: 600;"></td>
-                            <td th:text="${oferente.correo}"></td>
-                            <td th:text="${oferente.identificacion}"></td>
-                            <td>
-                                <form method="post" action="/admin/aprobar-oferente" class="inline">
-                                    <input type="hidden" name="idOferente" th:value="${oferente.idOferente}" />
-                                    <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
-                                </form>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div th:if="${oferentes == null || oferentes.isEmpty()}" class="empty-state">
-                <div class="empty-icon">&#9989;</div>
-                <p>No hay oferentes pendientes de aprobacion.</p>
-            </div>
-        </div>
+<div layout:fragment="content">
+    <div class="page-header">
+        <h1>&#128100; Oferentes pendientes de aprobación</h1>
+        <p>Revise y apruebe las solicitudes de registro de oferentes.</p>
     </div>
+
+    <div class="table-wrap" th:if="${oferentes != null and not #lists.isEmpty(oferentes)}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre completo</th>
+                    <th>Identificación</th>
+                    <th>Correo</th>
+                    <th>Nacionalidad</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="oferente : ${oferentes}">
+                    <td th:text="${oferente.nombre + ' ' + oferente.apellido}">—</td>
+                    <td th:text="${oferente.identificacion}">—</td>
+                    <td th:text="${oferente.correo}">—</td>
+                    <td th:text="${oferente.nacionalidad}">—</td>
+                    <td>
+                        <form method="post" action="/admin/aprobar-oferente" style="display:inline;">
+                            <input type="hidden" name="idOferente" th:value="${oferente.idOferente}"/>
+                            <button type="submit" class="btn btn-success btn-sm">&#10003; Aprobar</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p th:if="${oferentes == null or #lists.isEmpty(oferentes)}"
+       style="font-size:13px;color:#6c757d;padding:18px;background:#fff;border:1px solid #c8d0da;border-radius:4px;">
+        No hay oferentes pendientes de aprobación.
+    </p>
+</div>
 </body>
 </html>
