@@ -17,11 +17,4 @@
 
 ---
 
-## 🛠️ Tecnologías utilizadas
 
-- Java  
-- Spring MVC  
-- Oracle Database  
-- HTML y CSS  
-
----
