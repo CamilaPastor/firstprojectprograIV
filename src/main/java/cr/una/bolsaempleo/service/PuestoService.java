@@ -24,7 +24,9 @@ public interface PuestoService {
     
     List<Puesto> todosPublicosActivos();
 
-    
+    List<Puesto> todosActivos();
+
+
     List<Puesto> puestosActivosPorEmpresa(Integer idEmpresa);
 
     

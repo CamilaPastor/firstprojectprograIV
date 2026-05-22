@@ -24,6 +24,9 @@ public interface PuestoRepository extends JpaRepository<Puesto, Integer> {
     @Query("SELECT p FROM Puesto p WHERE p.tipoPublicacion = 'publico' AND p.activo = true ORDER BY p.fechaRegistro DESC")
     List<Puesto> findPublicosActivos();
 
+    @Query("SELECT p FROM Puesto p WHERE p.activo = true ORDER BY p.fechaRegistro DESC")
+    List<Puesto> findActivos();
+
     
     @Query("SELECT p FROM Puesto p WHERE p.empresa.idEmpresa = :idEmpresa AND p.tipoPublicacion = 'privado'")
     List<Puesto> findPrivadosByEmpresa(@Param("idEmpresa") Integer idEmpresa);

@@ -1,26 +1,17 @@
-# Docker Build Context Ignore File
-
-# Git
 .git
 .gitignore
 .gitattributes
 
-# IDE
 .idea/
 .vscode/
 *.swp
 *.swo
-*~
 .project
 .classpath
-.c9/
-*.launch
 .settings/
-*.sublime-workspace
 .DS_Store
 *.iml
 
-# Maven
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -28,48 +19,21 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 dependency-reduced-pom.xml
-.flattened-pom.xml
 
-# Gradle (antiguo)
 .gradle/
 build/
 
-# Log files
 *.log
 *.log.*
 logs/
 
-# Database
-*.db
-*.sqlite
-database/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
 
-# Documentation
 *.md
-docs/
 
-# OS
-Thumbs.db
 .env
 .env.local
 
-# Docker
-Dockerfile
-docker-compose*.yml
-.dockerignore
-
-# CI/CD
-.github/
-.gitlab-ci.yml
-.travis.yml
-
-# Archivos temporales
-.tmp/
-temp/
-*.tmp
-
-# Otros
-README.md
-HELP.md
-CONTRIBUTING.md
-LICENSE
+PROMPT_CLAUDE_CODE.md

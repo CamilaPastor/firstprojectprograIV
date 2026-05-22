@@ -1,29 +1,24 @@
 package cr.una.bolsaempleo.controller;
 
-import cr.una.bolsaempleo.dto.SessionUser;
-import cr.una.bolsaempleo.model.Empresa;
-import cr.una.bolsaempleo.model.Oferente;
+import cr.una.bolsaempleo.dto.*;
 import cr.una.bolsaempleo.model.Caracteristica;
+import cr.una.bolsaempleo.service.CaracteristicaService;
 import cr.una.bolsaempleo.service.EmpresaService;
 import cr.una.bolsaempleo.service.OferenteService;
-import cr.una.bolsaempleo.service.CaracteristicaService;
 import cr.una.bolsaempleo.service.ReporteService;
-import cr.una.bolsaempleo.util.SessionUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
-@Controller
-@RequestMapping("/admin")
+@RestController
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {
 
@@ -32,166 +27,83 @@ public class AdminController {
     private final CaracteristicaService caracteristicaService;
     private final ReporteService reporteService;
 
-    private SessionUser verificarSesion(HttpSession session, RedirectAttributes attributes) {
-        if (!SessionUtil.isTipo(session, "admin")) {
-            SessionUtil.addErrorMessage(attributes, "Debes iniciar sesion como administrador");
-            return null;
-        }
-        return SessionUtil.getSessionUser(session);
-    }
-
     @GetMapping("/dashboard")
-    public String dashboard(HttpSession session, Model model, RedirectAttributes attributes) {
-        SessionUser user = verificarSesion(session, attributes);
-        if (user == null) return "redirect:/login";
-
-        model.addAttribute("usuario", user);
-        model.addAttribute("empresasPendientes", empresaService.pendientes().size());
-        model.addAttribute("oferentesPendientes", oferenteService.pendientes().size());
-        model.addAttribute("totalCaracteristicas", caracteristicaService.todas().size());
-        return "admin/dashboard";
+    public Map<String, Object> dashboard() {
+        return Map.of(
+                "empresasPendientes", empresaService.pendientes().size(),
+                "oferentesPendientes", oferenteService.pendientes().size(),
+                "totalCaracteristicas", caracteristicaService.todas().size()
+        );
     }
 
     @GetMapping("/empresas-pendientes")
-    public String empresasPendientes(HttpSession session, Model model, RedirectAttributes attributes) {
-        SessionUser user = verificarSesion(session, attributes);
-        if (user == null) return "redirect:/login";
-
-        model.addAttribute("usuario", user);
-        model.addAttribute("empresas", empresaService.pendientes());
-        return "admin/empresas-pendientes";
+    public List<EmpresaResponse> empresasPendientes() {
+        return empresaService.pendientes().stream().map(EmpresaResponse::from).toList();
     }
 
-    @PostMapping("/aprobar-empresa")
-    public String aprobarEmpresa(@RequestParam Integer idEmpresa,
-                                 HttpSession session,
-                                 RedirectAttributes attributes) {
-        SessionUser user = verificarSesion(session, attributes);
-        if (user == null) return "redirect:/login";
-
+    @PostMapping("/empresas/{idEmpresa}/aprobar")
+    public ResponseEntity<?> aprobarEmpresa(@PathVariable Integer idEmpresa) {
         try {
             empresaService.aprobar(idEmpresa);
-            SessionUtil.addSuccessMessage(attributes, "Empresa aprobada y clave generada exitosamente");
+            return ResponseEntity.ok(MessageResponse.of("Empresa aprobada exitosamente"));
         } catch (Exception e) {
-            SessionUtil.addErrorMessage(attributes, "Error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(MessageResponse.of(e.getMessage()));
         }
-        return "redirect:/admin/empresas-pendientes";
     }
 
     @GetMapping("/oferentes-pendientes")
-    public String oferentesPendientes(HttpSession session, Model model, RedirectAttributes attributes) {
-        SessionUser user = verificarSesion(session, attributes);
-        if (user == null) return "redirect:/login";
-
-        model.addAttribute("usuario", user);
-        model.addAttribute("oferentes", oferenteService.pendientes());
-        return "admin/oferentes-pendientes";
+    public List<OferenteResponse> oferentesPendientes() {
+        return oferenteService.pendientes().stream().map(OferenteResponse::from).toList();
     }
 
-    @PostMapping("/aprobar-oferente")
-    public String aprobarOferente(@RequestParam Integer idOferente,
-                                  HttpSession session,
-                                  RedirectAttributes attributes) {
-        SessionUser user = verificarSesion(session, attributes);
-        if (user == null) return "redirect:/login";
-
+    @PostMapping("/oferentes/{idOferente}/aprobar")
+    public ResponseEntity<?> aprobarOferente(@PathVariable Integer idOferente) {
         try {
             oferenteService.aprobar(idOferente);
-            SessionUtil.addSuccessMessage(attributes, "Oferente aprobado exitosamente");
+            return ResponseEntity.ok(MessageResponse.of("Oferente aprobado exitosamente"));
         } catch (Exception e) {
-            SessionUtil.addErrorMessage(attributes, "Error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(MessageResponse.of(e.getMessage()));
         }
-        return "redirect:/admin/oferentes-pendientes";
     }
 
     @GetMapping("/caracteristicas")
-    public String caracteristicas(@RequestParam(value = "actualId", required = false) Integer actualId,
-                                  HttpSession session,
-                                  Model model,
-                                  RedirectAttributes attributes) {
-        SessionUser user = verificarSesion(session, attributes);
-        if (user == null) return "redirect:/login";
-
-        List<Caracteristica> raices = caracteristicaService.raices();
-        List<Caracteristica> subcategorias = null;
-        Caracteristica categoriaActual = null;
-
-        if (actualId != null) {
-            Optional<Caracteristica> cat = caracteristicaService.findById(actualId);
-            if (cat.isPresent()) {
-                categoriaActual = cat.get();
-                subcategorias = caracteristicaService.hijos(actualId);
-            }
-        }
-
-        List<Caracteristica> visibles = (subcategorias != null) ? subcategorias : raices;
-
-        model.addAttribute("usuario", user);
-        model.addAttribute("categorias", visibles);
-        model.addAttribute("categoriaActual", categoriaActual);
-        model.addAttribute("actualId", actualId);
-        model.addAttribute("todas", caracteristicaService.todas());
-        return "admin/caracteristicas";
+    public List<CaracteristicaResponse> caracteristicas(@RequestParam(value = "idPadre", required = false) Integer idPadre) {
+        List<Caracteristica> lista = idPadre == null
+                ? caracteristicaService.raices()
+                : caracteristicaService.hijos(idPadre);
+        return lista.stream().map(c -> CaracteristicaResponse.from(c, false)).toList();
     }
 
-    @PostMapping("/crear-caracteristica")
-    public String crearCaracteristica(@RequestParam String nombre,
-                                      @RequestParam(value = "idPadre", required = false) Integer idPadre,
-                                      HttpSession session,
-                                      RedirectAttributes attributes) {
-        SessionUser user = verificarSesion(session, attributes);
-        if (user == null) return "redirect:/login";
+    @GetMapping("/caracteristicas/arbol")
+    public List<CaracteristicaResponse> arbol() {
+        return caracteristicaService.raices().stream().map(c -> CaracteristicaResponse.from(c, true)).toList();
+    }
 
+    @PostMapping("/caracteristicas")
+    public ResponseEntity<?> crearCaracteristica(@Valid @RequestBody CaracteristicaRequest req) {
         try {
-            caracteristicaService.crear(nombre, idPadre);
-            SessionUtil.addSuccessMessage(attributes, "Caracteristica creada exitosamente");
+            Caracteristica c = caracteristicaService.crear(req.getNombre(), req.getDescripcion(), req.getIdPadre());
+            return ResponseEntity.ok(CaracteristicaResponse.from(c, false));
         } catch (Exception e) {
-            SessionUtil.addErrorMessage(attributes, "Error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(MessageResponse.of(e.getMessage()));
         }
-
-        if (idPadre != null) {
-            return "redirect:/admin/caracteristicas?actualId=" + idPadre;
-        }
-        return "redirect:/admin/caracteristicas";
     }
 
-    @PostMapping("/eliminar-caracteristica")
-    public String eliminarCaracteristica(@RequestParam Integer idCaracteristica,
-                                         HttpSession session,
-                                         RedirectAttributes attributes) {
-        SessionUser user = verificarSesion(session, attributes);
-        if (user == null) return "redirect:/login";
-
+    @DeleteMapping("/caracteristicas/{id}")
+    public ResponseEntity<?> eliminarCaracteristica(@PathVariable("id") Integer id) {
         try {
-            caracteristicaService.eliminar(idCaracteristica);
-            SessionUtil.addSuccessMessage(attributes, "Caracteristica eliminada");
+            caracteristicaService.eliminar(id);
+            return ResponseEntity.ok(MessageResponse.of("Caracteristica eliminada"));
         } catch (Exception e) {
-            SessionUtil.addErrorMessage(attributes, "Error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(MessageResponse.of(e.getMessage()));
         }
-        return "redirect:/admin/caracteristicas";
     }
 
-    @GetMapping("/reportes")
-    public String reportes(HttpSession session, Model model, RedirectAttributes attributes) {
-        SessionUser user = verificarSesion(session, attributes);
-        if (user == null) return "redirect:/login";
-
-        model.addAttribute("usuario", user);
-        return "admin/reportes";
-    }
-
-    @GetMapping("/generar-reporte")
-    public ResponseEntity<byte[]> generarReporte(@RequestParam Integer anio,
-                                                 @RequestParam Integer mes,
-                                                 HttpSession session) {
-        if (!SessionUtil.isTipo(session, "admin")) {
-            return ResponseEntity.status(401).build();
-        }
-
+    @GetMapping("/reportes/mensual")
+    public ResponseEntity<byte[]> generarReporte(@RequestParam Integer anio, @RequestParam Integer mes) {
         try {
             byte[] pdfBytes = reporteService.generarReporteMensual(anio, mes);
             String nombreArchivo = String.format("Reporte_Puestos_%04d_%02d.pdf", anio, mes);
-
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + nombreArchivo + "\"")
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)

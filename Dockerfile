@@ -1,7 +1,17 @@
+FROM node:20-alpine AS frontend-builder
 
-FROM maven:3.9-eclipse-temurin-17-alpine AS builder
+LABEL stage=frontend-builder
 
-LABEL stage=builder
+WORKDIR /frontend
+
+COPY frontend/ ./
+
+RUN npm install && mkdir -p /tmp/static && \
+    npx vite build --outDir /tmp/static --emptyOutDir
+
+FROM maven:3.9-eclipse-temurin-17-alpine AS backend-builder
+
+LABEL stage=backend-builder
 
 WORKDIR /app
 
@@ -9,13 +19,15 @@ COPY pom.xml .
 
 COPY src ./src
 
+COPY --from=frontend-builder /tmp/static ./src/main/resources/static
+
 RUN mvn clean package -DskipTests -q
 
 FROM eclipse-temurin:17-jre-alpine
 
 LABEL maintainer="Bolsa de Empleo"
 LABEL version="1.0.0"
-LABEL description="Aplicación Spring Boot 3.2.3 para Bolsa de Empleo"
+LABEL description="Spring Boot 3.2.3 REST API + React SPA"
 
 ENV JAVA_OPTS="-Xmx512m -Xms256m"
 ENV SPRING_PROFILES_ACTIVE=docker
@@ -24,7 +36,7 @@ RUN addgroup -S appuser && adduser -S appuser -G appuser
 
 WORKDIR /app
 
-COPY --from=builder /app/target/bolsa-empleo-1.0.0.jar app.jar
+COPY --from=backend-builder /app/target/bolsa-empleo-1.0.0.jar app.jar
 
 RUN chown -R appuser:appuser /app
 

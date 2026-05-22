@@ -32,7 +32,6 @@ public class Cv {
     private Oferente oferente;
 
     @NotNull(message = "El archivo PDF es requerido")
-    @Lob
     @Column(name = "archivo_pdf", nullable = false, columnDefinition = "BYTEA")
     @ToString.Exclude
     private byte[] archivoPdf;

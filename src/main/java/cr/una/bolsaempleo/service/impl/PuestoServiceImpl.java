@@ -96,6 +96,12 @@ public class PuestoServiceImpl implements PuestoService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<Puesto> todosActivos() {
+        return puestoRepository.findActivos();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Puesto> puestosActivosPorEmpresa(Integer idEmpresa) {
         return puestoRepository.findByEmpresa_IdEmpresaAndActivoTrue(idEmpresa);
     }
