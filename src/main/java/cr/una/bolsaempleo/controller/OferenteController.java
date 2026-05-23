@@ -3,7 +3,6 @@ package cr.una.bolsaempleo.controller;
 import cr.una.bolsaempleo.dto.*;
 import cr.una.bolsaempleo.model.Cv;
 import cr.una.bolsaempleo.model.OferenteCaracteristica;
-import cr.una.bolsaempleo.model.Puesto;
 import cr.una.bolsaempleo.security.AuthenticatedUser;
 import cr.una.bolsaempleo.service.CaracteristicaService;
 import cr.una.bolsaempleo.service.OferenteService;

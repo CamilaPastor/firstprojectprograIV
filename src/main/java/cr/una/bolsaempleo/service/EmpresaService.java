@@ -6,27 +6,11 @@ import java.util.Optional;
 
 public interface EmpresaService {
 
-    
     Empresa registrar(Empresa empresa);
 
-    
     Optional<Empresa> loginPorCorreo(String correo, String password);
 
-    
     List<Empresa> pendientes();
 
-    
     Empresa aprobar(Integer idEmpresa);
-
-    
-    Optional<Empresa> findById(Integer idEmpresa);
-
-    
-    List<Empresa> obtenerActivas();
-
-    
-    Empresa actualizar(Empresa empresa);
-
-    
-    void desactivar(Integer idEmpresa);
 }

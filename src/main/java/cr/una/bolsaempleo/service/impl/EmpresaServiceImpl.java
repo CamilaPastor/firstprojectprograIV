@@ -61,42 +61,4 @@ public class EmpresaServiceImpl implements EmpresaService {
         empresa.setAprobado(true);
         return empresaRepository.save(empresa);
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Empresa> findById(Integer idEmpresa) {
-        return empresaRepository.findById(idEmpresa);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Empresa> obtenerActivas() {
-        return empresaRepository.findAllActivas();
-    }
-
-    @Override
-    public Empresa actualizar(Empresa empresa) {
-        Empresa existente = empresaRepository.findById(empresa.getIdEmpresa())
-                .orElseThrow(() -> new IllegalArgumentException("Empresa no encontrada"));
-
-        existente.setNombre(empresa.getNombre());
-        existente.setLocalizacion(empresa.getLocalizacion());
-        existente.setTelefono(empresa.getTelefono());
-        existente.setDescripcion(empresa.getDescripcion());
-
-        if (empresa.getPasswordSinHashear() != null && !empresa.getPasswordSinHashear().isEmpty()) {
-            existente.setPasswordHash(passwordEncoder.encode(empresa.getPasswordSinHashear()));
-        }
-
-        return empresaRepository.save(existente);
-    }
-
-    @Override
-    public void desactivar(Integer idEmpresa) {
-        Empresa empresa = empresaRepository.findById(idEmpresa)
-                .orElseThrow(() -> new IllegalArgumentException("Empresa no encontrada"));
-
-        empresa.setActivo(false);
-        empresaRepository.save(empresa);
-    }
 }

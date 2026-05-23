@@ -9,12 +9,7 @@ import java.util.Optional;
 @Repository
 public interface AdministradorRepository extends JpaRepository<Administrador, Integer> {
 
-    
     Optional<Administrador> findByIdentificacion(String identificacion);
 
-    
     boolean existsByIdentificacion(String identificacion);
-
-    
-    long countByActivoTrue();
 }

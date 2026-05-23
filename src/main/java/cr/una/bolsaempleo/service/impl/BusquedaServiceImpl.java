@@ -14,8 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,37 +72,5 @@ public class BusquedaServiceImpl implements BusquedaService {
         return resultados.stream()
                 .sorted((a, b) -> b.getPorcentaje().compareTo(a.getPorcentaje()))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Puesto> buscarPuestosPorCaracteristicas(List<Integer> idsCaracteristicas) {
-        if (idsCaracteristicas == null || idsCaracteristicas.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        Set<Puesto> puestos = new HashSet<>();
-
-        for (Integer idCaracteristica : idsCaracteristicas) {
-            List<PuestoCaracteristica> puestosCaracteristica = puestoCaracteristicaRepository
-                    .findByCaracteristica_IdCaracteristica(idCaracteristica);
-
-            for (PuestoCaracteristica pc : puestosCaracteristica) {
-                if (pc.getPuesto().getActivo()) {
-                    puestos.add(pc.getPuesto());
-                }
-            }
-        }
-
-        return new ArrayList<>(puestos);
-    }
-
-    @Override
-    public List<Puesto> buscarPorRangoSalario(BigDecimal salarioMin, BigDecimal salarioMax) {
-        return puestoRepository.findByRangoSalario(salarioMin, salarioMax);
-    }
-
-    @Override
-    public List<Puesto> buscarPorKeyword(String keyword) {
-        return puestoRepository.buscarPorKeyword(keyword);
     }
 }

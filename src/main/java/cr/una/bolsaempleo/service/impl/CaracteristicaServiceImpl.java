@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -36,17 +35,6 @@ public class CaracteristicaServiceImpl implements CaracteristicaService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Caracteristica> findById(Integer idCaracteristica) {
-        return caracteristicaRepository.findById(idCaracteristica);
-    }
-
-    @Override
-    public Caracteristica crear(String nombre, Integer idPadre) {
-        return crear(nombre, null, idPadre);
-    }
-
-    @Override
     public Caracteristica crear(String nombre, String descripcion, Integer idPadre) {
         if (caracteristicaRepository.existsByNombre(nombre)) {
             throw new IllegalArgumentException("Ya existe una característica con este nombre");
@@ -64,18 +52,6 @@ public class CaracteristicaServiceImpl implements CaracteristicaService {
         }
 
         return caracteristicaRepository.save(caracteristica);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Caracteristica> obtenerHierarchy() {
-        return caracteristicaRepository.findHierarchy();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Caracteristica> hijosActivos(Integer idPadre) {
-        return caracteristicaRepository.findActiveHijos(idPadre);
     }
 
     @Override

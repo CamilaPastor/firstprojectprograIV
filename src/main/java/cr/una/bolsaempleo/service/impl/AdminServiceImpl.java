@@ -28,9 +28,4 @@ public class AdminServiceImpl implements AdminService {
 
         return Optional.empty();
     }
-
-    @Override
-    public Optional<Administrador> findById(Integer idAdmin) {
-        return administradorRepository.findById(idAdmin);
-    }
 }

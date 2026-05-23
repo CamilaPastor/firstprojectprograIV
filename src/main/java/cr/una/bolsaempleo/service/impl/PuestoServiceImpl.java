@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,17 +103,5 @@ public class PuestoServiceImpl implements PuestoService {
     @Transactional(readOnly = true)
     public List<Puesto> puestosActivosPorEmpresa(Integer idEmpresa) {
         return puestoRepository.findByEmpresa_IdEmpresaAndActivoTrue(idEmpresa);
-    }
-
-    @Override
-    public Puesto actualizar(Puesto puesto) {
-        Puesto existente = puestoRepository.findById(puesto.getIdPuesto())
-                .orElseThrow(() -> new IllegalArgumentException("Puesto no encontrado"));
-
-        existente.setDescripcion(puesto.getDescripcion());
-        existente.setSalario(puesto.getSalario());
-        existente.setTipoPublicacion(puesto.getTipoPublicacion());
-
-        return puestoRepository.save(existente);
     }
 }

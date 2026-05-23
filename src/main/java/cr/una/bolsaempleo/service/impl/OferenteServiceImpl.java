@@ -139,37 +139,4 @@ public class OferenteServiceImpl implements OferenteService {
     public Optional<Cv> obtenerCv(Integer idOferente) {
         return cvRepository.findByOferente_IdOferente(idOferente);
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Oferente> obtenerActivos() {
-        return oferenteRepository.findAllActivos();
-    }
-
-    @Override
-    public Oferente actualizar(Oferente oferente) {
-        Oferente existente = oferenteRepository.findById(oferente.getIdOferente())
-                .orElseThrow(() -> new IllegalArgumentException("Oferente no encontrado"));
-
-        existente.setNombre(oferente.getNombre());
-        existente.setApellido(oferente.getApellido());
-        existente.setNacionalidad(oferente.getNacionalidad());
-        existente.setTelefono(oferente.getTelefono());
-        existente.setResidencia(oferente.getResidencia());
-
-        if (oferente.getPasswordSinHashear() != null && !oferente.getPasswordSinHashear().isEmpty()) {
-            existente.setPasswordHash(passwordEncoder.encode(oferente.getPasswordSinHashear()));
-        }
-
-        return oferenteRepository.save(existente);
-    }
-
-    @Override
-    public void desactivar(Integer idOferente) {
-        Oferente oferente = oferenteRepository.findById(idOferente)
-                .orElseThrow(() -> new IllegalArgumentException("Oferente no encontrado"));
-
-        oferente.setActivo(false);
-        oferenteRepository.save(oferente);
-    }
 }

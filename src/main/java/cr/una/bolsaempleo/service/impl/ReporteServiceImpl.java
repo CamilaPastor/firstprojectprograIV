@@ -1,12 +1,8 @@
 package cr.una.bolsaempleo.service.impl;
 
 import cr.una.bolsaempleo.model.Puesto;
-import cr.una.bolsaempleo.model.Oferente;
 import cr.una.bolsaempleo.repository.PuestoRepository;
-import cr.una.bolsaempleo.repository.OferenteRepository;
 import cr.una.bolsaempleo.service.ReporteService;
-import cr.una.bolsaempleo.service.BusquedaService;
-import cr.una.bolsaempleo.dto.ResultadoCandidato;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +18,6 @@ import com.itextpdf.layout.properties.VerticalAlignment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -32,8 +27,6 @@ import java.util.List;
 public class ReporteServiceImpl implements ReporteService {
 
     private final PuestoRepository puestoRepository;
-    private final OferenteRepository oferenteRepository;
-    private final BusquedaService busquedaService;
 
     @Override
     public byte[] generarReporteMensual(Integer anio, Integer mes) throws IOException {
@@ -87,99 +80,6 @@ public class ReporteServiceImpl implements ReporteService {
 
         document.add(new Paragraph("\n\nEstadísticas:"));
         document.add(new Paragraph("Total de puestos: " + puestos.size()));
-
-        document.close();
-        return outputStream.toByteArray();
-    }
-
-    @Override
-    public byte[] generarReporteCandidatos(Integer idPuesto) throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PdfWriter writer = new PdfWriter(outputStream);
-        PdfDocument pdf = new PdfDocument(writer);
-        Document document = new Document(pdf);
-
-        Puesto puesto = puestoRepository.findById(idPuesto)
-                .orElseThrow(() -> new IllegalArgumentException("Puesto no encontrado"));
-
-        document.add(new Paragraph("Reporte de Candidatos")
-                .setTextAlignment(TextAlignment.CENTER)
-                .setFontSize(20));
-
-        document.add(new Paragraph("Puesto: " + puesto.getEmpresa().getNombre())
-                .setFontSize(12));
-
-        document.add(new Paragraph("\n"));
-
-        List<ResultadoCandidato> candidatos = busquedaService.buscarCandidatos(idPuesto);
-
-        Table table = new Table(5);
-        table.setWidth(com.itextpdf.layout.properties.UnitValue.createPercentValue(100));
-
-        String[] headers = {"Nombre", "Email", "Cumplidos", "Total", "Porcentaje"};
-        for (String header : headers) {
-            Cell cell = new Cell();
-            cell.add(new Paragraph(header).setBold());
-            cell.setVerticalAlignment(VerticalAlignment.MIDDLE);
-            table.addCell(cell);
-        }
-
-        for (ResultadoCandidato rc : candidatos) {
-            Oferente o = rc.getOferente();
-            table.addCell(new Cell().add(new Paragraph(o.getNombre() + " " + o.getApellido())));
-            table.addCell(new Cell().add(new Paragraph(o.getCorreo())));
-            table.addCell(new Cell().add(new Paragraph(rc.getCumplidos().toString())));
-            table.addCell(new Cell().add(new Paragraph(rc.getTotal().toString())));
-            table.addCell(new Cell().add(new Paragraph(String.format("%.2f%%", rc.getPorcentaje()))));
-        }
-
-        document.add(table);
-
-        document.close();
-        return outputStream.toByteArray();
-    }
-
-    @Override
-    public byte[] generarReporteOferentes() throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PdfWriter writer = new PdfWriter(outputStream);
-        PdfDocument pdf = new PdfDocument(writer);
-        Document document = new Document(pdf);
-
-        document.add(new Paragraph("Reporte de Oferentes Aprobados")
-                .setTextAlignment(TextAlignment.CENTER)
-                .setFontSize(20));
-
-        document.add(new Paragraph("Fecha: " + LocalDate.now().toString())
-                .setFontSize(12));
-
-        document.add(new Paragraph("\n"));
-
-        List<Oferente> oferentes = oferenteRepository.findAprobadosConCv();
-
-        Table table = new Table(5);
-        table.setWidth(com.itextpdf.layout.properties.UnitValue.createPercentValue(100));
-
-        String[] headers = {"Nombre", "Email", "Nacionalidad", "Residencia", "CV"};
-        for (String header : headers) {
-            Cell cell = new Cell();
-            cell.add(new Paragraph(header).setBold());
-            cell.setVerticalAlignment(VerticalAlignment.MIDDLE);
-            table.addCell(cell);
-        }
-
-        for (Oferente o : oferentes) {
-            table.addCell(new Cell().add(new Paragraph(o.getNombre() + " " + o.getApellido())));
-            table.addCell(new Cell().add(new Paragraph(o.getCorreo())));
-            table.addCell(new Cell().add(new Paragraph(o.getNacionalidad() != null ? o.getNacionalidad() : "N/A")));
-            table.addCell(new Cell().add(new Paragraph(o.getResidencia() != null ? o.getResidencia() : "N/A")));
-            table.addCell(new Cell().add(new Paragraph(o.getCv() != null ? "Sí" : "No")));
-        }
-
-        document.add(table);
-
-        document.add(new Paragraph("\n\nEstadísticas:"));
-        document.add(new Paragraph("Total de oferentes: " + oferentes.size()));
 
         document.close();
         return outputStream.toByteArray();
